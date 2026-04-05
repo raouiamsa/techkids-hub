@@ -1,0 +1,50 @@
+{
+  "name": "@org/web",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "web",
+    "targets": {
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/next:server",
+        "defaultConfiguration": "development",
+        "options": {
+          "buildTarget": "web:build",
+          "dev": true,
+          "port": 4200
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "web:build:development",
+            "dev": true
+          },
+          "production": {
+            "buildTarget": "web:build:production",
+            "dev": false
+          }
+        }
+      },
+      "build": {
+        "executor": "@nx/next:build",
+        "outputs": [
+          "{workspaceRoot}/apps/web/.next"
+        ],
+        "options": {
+          "outputPath": "dist/apps/web"
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.27",
+    "lucide-react": "^0.577.0",
+    "next": "^16.1.6",
+    "postcss": "^8.5.8",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "tailwindcss": "^3.4.19"
+  }
+}

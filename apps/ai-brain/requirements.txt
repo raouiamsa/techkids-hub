@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+langchain
+langchain-google-genai
+langgraph
+chromadb
+pypdf
+youtube-transcript-api
+beautifulsoup4
+pydantic
+python-dotenv
+requests
+langchain-huggingface
+sentence-transformers
+langchain-chroma
+langchain-community
+pymupdf

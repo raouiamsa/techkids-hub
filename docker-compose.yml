@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Base de données pour stocker les utilisateurs, cours, etc.
+  postgres:
+    image: postgres:15-alpine
+    container_name: techkids-postgres
+    # Variables pour se connecter
+    environment:
+      POSTGRES_USER: techkids
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: techkids_db
+    # Ouvre le port 5432 pour que votre PC puisse y accéder
+    ports:
+      - "5433:5432"
+    # Sauvegarde les données dans un "volume" pour ne pas les perdre
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Cache ultra-rapide pour les sessions utilisateurs
+  redis:
+    image: redis:7-alpine
+    container_name: techkids-redis
+    ports:
+      - "6379:6379"
+
+  # Message Queue (recommandé par le PDF pour les events inter-services)
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: techkids-rabbitmq
+    ports:
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # UI Management
+    environment:
+      RABBITMQ_DEFAULT_USER: techkids
+      RABBITMQ_DEFAULT_PASS: techkids
+
+volumes:
+  postgres_data:
