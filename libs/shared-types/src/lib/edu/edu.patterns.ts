@@ -22,5 +22,10 @@ export const EDU_PATTERNS = {
     DRAFTS_LIST: { cmd: 'edu.drafts.list' },
     DRAFTS_PUBLISH: { cmd: 'edu.drafts.publish' },
     DRAFTS_DELETE: { cmd: 'edu.drafts.delete' },
+    // Bibliothèque de Contenus (ContentSources)
+    CONTENT_SOURCES_CREATE: { cmd: 'edu.content_sources.create' },
+    CONTENT_SOURCES_LIST: { cmd: 'edu.content_sources.list' },
+    CONTENT_SOURCES_DELETE: { cmd: 'edu.content_sources.delete' },
+    CONTENT_SOURCES_UPDATE_STATUS: { cmd: 'edu.content_sources.update_status' },
 } as const;
 

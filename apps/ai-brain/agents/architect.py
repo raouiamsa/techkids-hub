@@ -1,93 +1,104 @@
 import os
-from langchain_google_genai import ChatGoogleGenerativeAI
+import json
+import requests
+from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 from .state import AgentState
 
 load_dotenv()
 
-model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=os.getenv("GOOGLE_API_KEY"))
+# --- Configuration du Modèle ---
+# LLaMA 3.3 70B : Choisi pour sa puissance de structuration et sa rapidité sur Groq
+model = ChatGroq(
+    model="llama-3.3-70b-versatile",
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.3
+)
 
 def architect_node(state: AgentState):
-    print(" Architecte: Je conçois le plan pédagogique...")
+    """
+    Nœud Architecte : Analyse la demande du professeur, détecte le langage 
+    de programmation approprié et conçoit le plan (syllabus) du cours.
+    """
+    print(" 📐 Architecte : Analyse de la thématique et conception du syllabus...")
 
-    feedback_str = f"\n RÉVISION DEMANDÉE PAR LE PROFESSEUR : {state.get('teacher_feedback')}" if state.get('teacher_feedback') else ""
+    # Récupération des directives optionnelles du professeur (Feedback Loop)
+    feedback_str = f"\n DIRECTIVES SUPPLÉMENTAIRES : {state.get('teacher_feedback')}" if state.get('teacher_feedback') else ""
 
     prompt = f"""
-Tu es Pr. Karim, Ingénieur Pédagogique Senior avec 15 ans d'expérience en conception de curricula pour les jeunes de {state['age_group']} ans.
-Ta mission : concevoir un SYLLABUS OFFICIEL DE COURS complet, rigoureux et directement exploitable par un enseignant.
+Tu es un Ingénieur Pédagogique Senior spécialisé dans l'éducation technologique.
+Ta mission est de concevoir un SYLLABUS structuré pour des élèves de {state['age_group']} ans.
 
 SUJET DU COURS : "{state['input_request']}"
-GROUPE D'ÂGE : {state['age_group']} ans
+ÂGE CIBLE : {state['age_group']} ans
+NIVEAU : {state.get('level', 'BEGINNER')}
 {feedback_str}
 
 ═══════════════════════════════════════════════════
-RÈGLES ABSOLUES — À RESPECTER IMPÉRATIVEMENT :
+MISSION SUR LE LANGAGE TECHNIQUE :
 ═══════════════════════════════════════════════════
-1. AUCUNE introduction conversationnelle ("Bien sûr !", "Avec plaisir !", "Voici !", etc.)
-2. AUCUN style blog ou chatbot — tu rédiges un document de travail professionnel
-3. Commence DIRECTEMENT par le titre du cours sans préambule
-4. Chaque module doit avoir : durée, objectifs mesurables, contenu, activité, évaluation
-5. Utilise des verbes d'action pédagogique (Bloom) : Identifier, Analyser, Concevoir, Appliquer, Évaluer...
-6. Le cours doit couvrir AU MINIMUM 3 modules avec progression logique (simple → complexe)
+1. Analyse le "SUJET DU COURS". Si un langage est mentionné (ex: Python, Scratch, C++), utilise-le.
+2. Sinon, déduis la technologie la plus adaptée au contexte (ex: Robotique -> Arduino/C++, Web -> HTML/JS, IA -> Python).
+3. Si le sujet n'est pas technique, indique "Théorie".
 
 ═══════════════════════════════════════════════════
-FORMAT OBLIGATOIRE (respecter scrupuleusement) :
+FORMAT OBLIGATOIRE (JSON STRICT) :
 ═══════════════════════════════════════════════════
+Génère UNIQUEMENT un objet JSON valide respectant cette structure :
 
-# 🎓 [TITRE COMPLET DU COURS]
-
-| Métadonnée | Valeur |
-|---|---|
-| **Niveau** | [Débutant / Intermédiaire / Avancé] |
-| **Groupe d'âge** | {state['age_group']} ans |
-| **Durée totale** | [X heures] |
-| **Prérequis** | [Liste précise ou "Aucun"] |
-| **Format** | [Présentiel / En ligne / Mixte] |
-
-## 🎯 Objectifs Généraux du Cours
-À l'issue de ce cours, l'apprenant sera capable de :
-1. [Objectif mesurable 1 — verbe Bloom + résultat attendu]
-2. [Objectif mesurable 2]
-3. [Objectif mesurable 3]
-
----
-
-## 📚 MODULE 1 : [TITRE]
-**⏱ Durée :** [X min]
-**🎯 Objectif du module :** [Objectif spécifique]
-
-### Contenu théorique
-- **[Concept A]** : [Explication précise]
-- **[Concept B]** : [Explication précise]
-
-### 🔬 Activité pratique
-> [Description détaillée de l'exercice, avec étapes numérotées]
-
-### ✅ Critères d'évaluation
-- [ ] [Critère 1]
-- [ ] [Critère 2]
-
----
-
-## 📚 MODULE 2 : [TITRE]
-[Même structure que Module 1]
-
----
-
-## 📚 MODULE 3 : [TITRE]
-[Même structure que Module 1]
-
----
-
-## 📝 ÉVALUATION FINALE
-**Type :** [Projet / QCM / Oral / Production]
-**Description :** [Énoncé complet]
-**Critères de réussite :** [Grille d'évaluation]
-
-## 📦 RESSOURCES ET MATÉRIEL
-- **Outils :** [Liste]
-- **Documents :** [Références]
-- **Bibliographie :** [Sources]
+```json
+{{
+  "programmingLanguage": "Le langage détecté",
+  "courseTitle": "Titre professionnel du cours",
+  "level": "{state.get('level')}",
+  "totalDuration": "Durée totale estimée",
+  "objectives": ["Objectif 1", "Objectif 2"],
+  "modules": [
+    {{
+      "order": 1,
+      "title": "Titre du module",
+      "duration": "X min",
+      "description": "Description succincte du contenu"
+    }}
+  ]
+}}
+```
 """
+    
+    # Appel au LLM pour la génération du plan
     response = model.invoke(prompt)
-    return {"syllabus": response.content}
+    raw_content = response.content.strip()
+    
+    # --- Extraction sécurisée du bloc JSON du Markdown ---
+    if "```json" in raw_content:
+        raw_content = raw_content.split("```json")[1].split("```")[0]
+    elif "```" in raw_content:
+        raw_content = raw_content.split("```")[1].split("```")[0]
+    
+    clean_json = raw_content.strip()
+    
+    # --- Extraction du langage pour synchroniser les autres agents (Writer, Assessor) ---
+    detected_lang = "Python" # Valeur de secours par défaut
+    try:
+        data = json.loads(clean_json)
+        detected_lang = data.get("programmingLanguage", "Python")
+    except Exception:
+        print(" ⚠️ Architecte : Erreur de lecture JSON, utilisation du langage par défaut.")
+
+    # --- Télémétrie : Envoi de la progression (30%) au Hub NestJS ---
+    draft_id = state.get("draft_id")
+    if draft_id:
+        try:
+            # On utilise l'endpoint interne pour mettre à jour la progression du brouillon
+            requests.patch(
+                f"http://localhost:3000/api/ai/internal/drafts/{draft_id}/progress", 
+                json={"progressPercent": 30}
+            )
+        except Exception as e:
+            print(f" ⚠️ Architecte : Erreur lors de la mise à jour de la progression : {e}")
+
+    # On retourne le syllabus JSON et le langage détecté pour mettre à jour l'état global
+    return {
+        "syllabus": clean_json,
+        "programming_language": detected_lang
+    }

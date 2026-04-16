@@ -7,16 +7,19 @@ import { EduTrackerModule } from './edu-tracker/edu-tracker.module';
 import { AuthModule as SharedAuthModule } from '@org/auth';
 import { ParentModule } from './parent/parent.module';
 import { AiController } from './ai/ai.controller';
+import { MessagingModule } from '@org/messaging';
 
 @Module({
   imports: [
     HttpModule,
-    LocalAuthModule, 
-    EduTrackerModule, 
-    SharedAuthModule, 
-    ParentModule
+    LocalAuthModule,
+    EduTrackerModule,
+    SharedAuthModule,
+    ParentModule,
+    MessagingModule,   // ← Enregistre RABBITMQ_CLIENT pour AiController
   ],
   controllers: [AppController, AiController],
   providers: [AppService],
 })
 export class AppModule { }
+

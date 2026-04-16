@@ -1,0 +1,11 @@
+import { Module } from '@nestjs/common';
+import { DatabaseModule } from '@org/database';
+import { LibraryController } from './library.controller';
+import { LibraryService } from './library.service';
+
+@Module({
+  imports: [DatabaseModule],
+  controllers: [LibraryController],
+  providers: [LibraryService],
+})
+export class LibraryModule {}

@@ -29,8 +29,8 @@ services:
     image: rabbitmq:3-management-alpine
     container_name: techkids-rabbitmq
     ports:
-      - "5672:5672"    # AMQP
-      - "15672:15672"  # UI Management
+      - "5672:5672" # AMQP
+      - "15672:15672" # UI Management
     environment:
       RABBITMQ_DEFAULT_USER: techkids
       RABBITMQ_DEFAULT_PASS: techkids

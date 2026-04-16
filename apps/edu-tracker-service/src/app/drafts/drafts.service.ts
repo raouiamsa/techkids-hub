@@ -18,25 +18,60 @@ export class DraftsService {
     });
   }
 
+  async createProcessingDraft(data: { teacherId: string; sourceId: string }) {
+    this.logger.log(`Création d'un brouillon PROCESSING pour le prof: ${data.teacherId}`);
+    return this.prisma.generatedDraft.create({
+      data: {
+        teacherId: data.teacherId,
+        sourceId: data.sourceId,
+        status: DraftStatus.PROCESSING,
+        progressPercent: 0,
+      },
+    });
+  }
+
+  async updateDraftProgress(id: string, progress: number, syllabus?: any, content?: string) {
+    this.logger.log(`Mise à jour de la progression du brouillon ${id} : ${progress}%`);
+    const updateData: any = { progressPercent: progress };
+
+    if (progress >= 100) {
+      updateData.status = DraftStatus.PENDING_REVIEW;
+      if (syllabus) updateData.syllabus = syllabus;
+      if (content) updateData.content = content;
+    }
+
+    return this.prisma.generatedDraft.update({
+      where: { id },
+      data: updateData,
+    });
+  }
+
   /**
-   * Créer un nouveau brouillon généré par l'IA
+   * Créer un nouveau brouillon généré par l'IA (Ancienne méthode synchrone)
    */
   async createDraft(data: {
-    syllabus: any; // Type Json de Prisma
+    syllabus: any;
     content: string;
     teacherId: string;
     sourceId: string;
   }) {
     this.logger.log(`Création d'un nouveau brouillon pour le prof: ${data.teacherId}`);
-    return this.prisma.generatedDraft.create({
-      data: {
-        syllabus: data.syllabus,
-        content: data.content,
-        teacherId: data.teacherId,
-        sourceId: data.sourceId,
-        status: DraftStatus.PENDING_REVIEW,
-      },
-    });
+    try {
+      const result = await this.prisma.generatedDraft.create({
+        data: {
+          syllabus: data.syllabus,
+          content: data.content,
+          teacherId: data.teacherId,
+          sourceId: data.sourceId,
+          status: DraftStatus.PENDING_REVIEW,
+        },
+      });
+      return result;
+    } catch (error: any) {
+      this.logger.error(" ERREUR FATALE PRISMA DANS createDraft ");
+      console.error("Détails de l'erreur Prisma:", error);
+      throw error;
+    }
   }
 
   //Lister les brouillons d'un professeur
@@ -48,8 +83,14 @@ export class DraftsService {
     });
   }
 
-  //Approuver ou rejeter un brouillon
+  async getDraft(id: string) {
+    return this.prisma.generatedDraft.findUnique({
+      where: { id },
+      include: { source: true },
+    });
+  }
 
+  //Approuver ou rejeter un brouillon
   async updateStatus(id: string, status: DraftStatus) {
     return this.prisma.generatedDraft.update({
       where: { id },
@@ -57,7 +98,9 @@ export class DraftsService {
     });
   }
 
-  //publier un brouillon 
+  // ── Publication Full-JSON ─────────────────────────────────────────────────
+  // Désérialise le JSON du Rédacteur (Gemini + Qwen) et crée dans PostgreSQL :
+  // 1 Course  →  N Module  →  M Exercise (TEXT, QUIZ, CODE)
   async publish(draftId: string) {
     const draft = await this.prisma.generatedDraft.findUnique({
       where: { id: draftId },
@@ -65,41 +108,95 @@ export class DraftsService {
     });
 
     if (!draft) throw new Error('Brouillon introuvable');
+    this.logger.log(` Publication Full-JSON du brouillon ${draftId} vers le LMS...`);
+    // Le champ "content" stocke le JSON Full-Format généré par writer.py
+    let courseData: any = {};
+    try {
+      const contentStr = typeof draft.content === 'string'
+        ? draft.content
+        : JSON.stringify(draft.content);
+      courseData = JSON.parse(contentStr);
+    } catch (e) {
+      this.logger.warn(' Impossible de parser le JSON. Mode fallback activé.');
+      courseData = { courseTitle: draft.source?.title || 'Cours IA', modules: [] };
+    }
 
-    this.logger.log(`Publication du brouillon ${draftId} vers le LMS...`);
+    const modules: any[] = courseData.modules || [];
+    const courseTitle = courseData.courseTitle
+      || draft.source?.title?.replace('.pdf', '')
+      || 'Cours IA';
+    const courseDesc = (courseData.objectives || []).join('. ')
+      || `Cours IA (${courseData.level || 'Tous niveaux'})`;
 
-    // 1. On crée le cours final
+    // ── ÉTAPE 2 : Créer le Course parent ─────────────────────────────────────
     const course = await this.prisma.course.create({
       data: {
-        title: draft.source.title.replace('.pdf', ''),
-        description: `Cours généré par IA à partir de : ${draft.source.title}`,
+        title: courseTitle,
+        description: courseDesc,
         teacherId: draft.teacherId,
         isPublished: true,
       },
     });
+    this.logger.log(`Course créé : "${courseTitle}" (ID: ${course.id})`);
 
-    // 2. On transforme le Syllabus (JSON) en modules réels
-    // On suppose que le syllabus est un tableau de modules
-    const syllabus = (draft.syllabus as any[]) || [];
+    // ── ÉTAPE 3 : Créer chaque Module + ses Exercises ────────────────────────
+    for (const [index, moduleData] of modules.entries()) {
 
-    for (const [index, moduleData] of syllabus.entries()) {
-      await this.prisma.module.create({
+      // 3a. Module physique en base de données
+      const createdModule = await this.prisma.module.create({
         data: {
           title: moduleData.title || `Module ${index + 1}`,
-          order: index + 1,
-          content: moduleData.content || draft.content,
+          order: moduleData.order || index + 1,
+          content: moduleData.content || '',
           courseId: course.id,
         },
       });
+      this.logger.log(`   Module ${index + 1} créé : "${moduleData.title}"`);
+
+
+      const exText: any[] = moduleData.exercises_text || [];
+      for (const ex of exText) {
+
+        const exerciseType = ex.type === 'CODE' ? 'CODE_CHALLENGE' : 'QUIZ';
+        await this.prisma.exercise.create({
+          data: {
+            title: ex.title || 'Exercice',
+            instructions: JSON.stringify(ex.questions || {}), // On sérialise les questions en String
+            exerciseType: exerciseType as any,
+            solution: null,
+            moduleId: createdModule.id,
+          },
+        });
+      }
+
+      // 3c. Exercices CODE → CODE_CHALLENGE (via Qwen 2.5 Coder)
+      const exCode: any[] = moduleData.exercises_code || [];
+      for (const codeEx of exCode) {
+        await this.prisma.exercise.create({
+          data: {
+            title: codeEx.title || 'Exercice de code',
+            instructions: codeEx.instructions || '',  // Instructions textuelles
+            exerciseType: 'CODE_CHALLENGE',
+            solution: codeEx.solution || null,        // La solution complète en String
+            moduleId: createdModule.id,
+          },
+        });
+      }
+
+      const totalEx = exText.length + exCode.length;
+      if (totalEx > 0) {
+        this.logger.log(`${totalEx} exercice(s) créé(s) pour le module ${index + 1}`);
+      }
     }
 
-    // 3. On marque le brouillon comme approuvé/publié
+    // ── ÉTAPE 4 : Archiver le brouillon comme APPROVED ───────────────────────
     await this.prisma.generatedDraft.update({
       where: { id: draftId },
       data: { status: DraftStatus.APPROVED },
     });
 
-    return course;
+    this.logger.log(`Cours "${courseTitle}" publié avec ${modules.length} module(s) !`);
+    return { course, modulesCount: modules.length };
   }
 
   async deleteDraft(id: string) {

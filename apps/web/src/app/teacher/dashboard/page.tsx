@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/auth.context';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
-  BookOpen, Brain, Users, PlusCircle, Sparkles, 
+  BookOpen, Brain, Users, PlusCircle, Sparkles, Library,
   ChevronRight, TrendingUp, Clock, BookText, 
   Settings, LayoutDashboard
 } from 'lucide-react';
@@ -48,6 +48,13 @@ export default function TeacherDashboardPage() {
       icon: BookOpen,
       color: 'bg-emerald-500',
       link: '/courses'
+    },
+    {
+      title: 'Ma Bibliothèque',
+      desc: 'Gérez vos PDFs, vidéos et liens web. Visualisez vos sources et suivez leur statut d\'indexation.',
+      icon: Library,
+      color: 'bg-purple-500',
+      link: '/teacher/library'
     },
     {
       title: 'Suivi Élèves',

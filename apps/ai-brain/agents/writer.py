@@ -1,149 +1,179 @@
 import os
-from langchain_google_genai import ChatGoogleGenerativeAI
+import json
+import requests
+from langchain_groq import ChatGroq
 from langchain_chroma import Chroma
-from google import genai as google_genai
+from langchain_huggingface import HuggingFaceEmbeddings
 from dotenv import load_dotenv
 from .state import AgentState
 
 load_dotenv()
 
-model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=os.getenv("GOOGLE_API_KEY"))
+# --- Configuration des Modèles (Basée sur la liste Groq mise à jour) ---
 
-_genai_client = google_genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+# ✍️ LLAMA 3.3 70B : Pour la narration pédagogique, la densité et le ton
+text_model = ChatGroq(
+    model="llama-3.3-70b-versatile",
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.6 
+)
 
-class GeminiEmbeddings:
-    """Wrapper LangChain-compatible pour Gemini Embeddings API"""
-    def embed_documents(self, texts: list[str]) -> list[list[float]]:
-        result = _genai_client.models.embed_content(
-            model="text-embedding-005",
-            contents=texts,
-        )
-        return [e.values for e in result.embeddings]
+# 💻 QWEN 3 32B : L'expert pour générer du code et des solutions sans erreurs
+code_expert_model = ChatGroq(
+    model="qwen/qwen3-32b",
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.1 
+)
 
-    def embed_query(self, text: str) -> list[float]:
-        result = _genai_client.models.embed_content(
-            model="text-embedding-005",
-            contents=[text],
-        )
-        return result.embeddings[0].values
+# Initialisation des Embeddings pour la recherche RAG
+_embeddings = HuggingFaceEmbeddings(
+    model_name="intfloat/multilingual-e5-small",
+    model_kwargs={"device": "cpu"},
+    encode_kwargs={"normalize_embeddings": True}
+)
 
-# DOIT être identique à ingest.py — sinon ChromaDB ne trouve rien
-vectorstore = Chroma(persist_directory="./data/chroma_db", embedding_function=GeminiEmbeddings())
+# Connexion à la base de données vectorielle locale
+vectorstore = Chroma(persist_directory="./data/chroma_db", embedding_function=_embeddings)
+
+
+def _clean_json(raw: str) -> str:
+    """ Nettoie la réponse de l'IA pour extraire uniquement le bloc JSON pur. """
+    raw = raw.strip()
+    if "```json" in raw:
+        raw = raw.split("```json")[1].split("```")[0]
+    elif "```" in raw:
+        raw = raw.split("```")[1].split("```")[0]
+    return raw.strip()
+
+
+def _generate_code_exercises(module_title: str, module_content: str, age_group: int, language: str) -> list:
+    """ Appelle l'expert code pour créer des défis et leurs SOLUTIONS commentées. """
+    prompt = f"""Tu es un tuteur expert en {language} pour des enfants de {age_group} ans.
+Pour le module "{module_title}", génère 2 exercices de programmation interactifs.
+
+CONTEXTE DU COURS : {module_content[:500]}
+
+RÈGLES STRICTES :
+- Langage obligatoire : {language}
+- TU DOIS FOURNIR LA SOLUTION COMPLÈTE ET COMMENTÉE pour chaque exercice.
+- Format JSON (tableau d'objets) uniquement : [{{ "title", "instructions", "starterCode", "solution", "hints" }}]
+"""
+    try:
+        response = code_expert_model.invoke(prompt)
+        clean = _clean_json(response.content)
+        return json.loads(clean)
+    except Exception as e:
+        print(f"❌ Erreur Expert Code ({language}) : {e}")
+        return []
+
 
 def writer_node(state: AgentState):
-    print(f" Rédacteur: Rédaction EXPERTE (BGE-M3 + Traçabilité) pour {state['course_id']}...")
+    """
+    Nœud Rédacteur : Sophie Chen rédige un contenu massif, pédagogique et sourcé.
+    Elle inclut désormais le Projet Final et les corrigés détaillés.
+    """
+    lang = state.get("programming_language", "Python")
+    print(f"✍️ Rédacteur : Sophie Chen rédige le cours riche de {lang} avec citations...")
 
-    # On cherche plus de documents (k=10) pour une meilleure couverture
-    query = f"Contenu éducatif précis pour : {state['syllabus'][:400]}"
+    # --- RAG : Recherche par similarité (k=15 pour une richesse maximale) ---
+    syllabus_str = state['syllabus'] if isinstance(state['syllabus'], str) else json.dumps(state['syllabus'])
+    query = f"Détails pédagogiques exhaustifs et concepts pour : {syllabus_str[:400]}"
+    
     docs = vectorstore.similarity_search(
         query,
-        k=10,
-        filter={"course_id": state['course_id']}
+        k=15,
+        filter={"course_id": {"$in": state['course_ids']}}
     )
 
+    # --- Préparation du Contexte enrichi avec Métadonnées (Citations) ---
+    context_parts = []
     source_docs_info = []
-    if not docs:
-        print(" Attention: Aucun document trouvé pour cet ID.")
-        context = "Aucune source externe — génère depuis tes connaissances pédagogiques."
-    else:
-        # On extrait le contenu ET on garde une trace des sources pour le Critique
-        context_parts = []
-        for d in docs:
-            page = d.metadata.get('page', '?')
-            source_docs_info.append({"page": page, "content": d.page_content[:200]})
-            context_parts.append(f"[Source Page {page}]: {d.page_content}")
+    for d in docs:
+        name = d.metadata.get("source_name", "Source")
+        # Gestion Page (PDF) vs Timestamp (Vidéo)
+        location = f"Page {d.metadata.get('page')}" if d.metadata.get('page') else f"Temps {d.metadata.get('timestamp')}"
+        ref_id = f"[{name}, {location}]"
         
-        context = "\n\n".join(context_parts)
+        context_parts.append(f"{ref_id}: {d.page_content}")
+        source_docs_info.append({"ref": ref_id, "content": d.page_content[:200]})
 
-    feedback_str = f"\n RÉVISION DEMANDÉE : {state.get('teacher_feedback')}" if state.get('teacher_feedback') else ""
+    context = "\n\n".join(context_parts)
+    feedback_str = f"\nDIRECTIVES PROFESSEUR : {state.get('teacher_feedback')}" if state.get('teacher_feedback') else ""
 
-    prompt = f"""
-Tu es l'Expert-Rédacteur, spécialisée en ingénierie pédagogique pour la Tech et la Science ({state['age_group']} ans).
-Ton objectif est de transformer les sources brutes en un cours structuré, captivant et IRRÉPROCHABLE.
+    # --- Prompt Sophie Chen v2 : DENSITÉ, CITATIONS et PROJET FINAL ---
+    llama_prompt = f"""Tu es Sophie Chen, rédactrice tech pour enfants de {state['age_group']} ans.
+Ta mission : Créer un cours passionnant, TRÈS DÉTAILLÉ et SOURCÉ.
 
- SOURCES DOCUMENTAIRES (VÉRIFIÉES) :
+LANGAGE : {lang} | NIVEAU : {state.get('level')}
+
+SOURCES DOCUMENTAIRES AVEC RÉFÉRENCES :
 {context}
-SYLLABUS À SUIVRE :
-{state['syllabus']}
+
+SYLLABUS ET DIRECTIVES :
+{syllabus_str}
 {feedback_str}
 
-RÈGLES D'OR :
- Interdit : "Bonjour !", "Bien sûr !", "Allons-y !", style chatbot.
- Citations : Cite les sources (ex: "D'après la page X du document...").
- Densité : Dense, riche, précis. Chaque concept pleinement expliqué.
- Exemples : Adaptés aux jeunes de {state['age_group']} ans (robots, drones, espace, jeux).
- Exercices : Énoncés complets — AUCUN placeholder.
+CONSIGNES DE RÉDACTION STRICTES :
+1. DENSITÉ : Chaque module doit être riche (environ 1000 mots). Ne résume pas, explique chaque concept avec des analogies.
+2. CITATIONS OBLIGATOIRES : Cite tes sources au format "(Source: Nom, Page/Temps)" dès qu'une information vient des documents.
+3. PROJET FINAL : Conçois un projet de synthèse captivant à la fin du cours (énoncé, étapes, conseils).
+4. FORMAT : Réponds uniquement en JSON STRICT.
 
-
-STRUCTURE OBLIGATOIRE DU COURS :
-
-#  [TITRE COMPLET DE LA LEÇON]
-> **Durée estimée :** [X min] | **Niveau :** [niveau] | **Prérequis :** [...]
-## Objectifs d'apprentissage
-À l'issue de cette leçon, l'apprenant sera capable de :
-- [Verbe de Bloom 1 — précis et mesurable]
-- [Verbe de Bloom 2]
-- [Verbe de Bloom 3]
-
-## 1. [TITRE SECTION THÉORIQUE 1]
-[3 à 5 paragraphes : définitions, mécanismes, analogies]
-
-###  Point clé
-> [Formule essentielle à retenir]
-
-###  Exemple concret
-**Situation :** [...] **Application :** [...] **Résultat :** [...]
-
-## 2. [TITRE SECTION THÉORIQUE 2]
-[Contenu détaillé]
-
-###  Point clé
-> [...]
-
-## 3. [CONNEXION THÉORIE-PRATIQUE]
-[Problèmes réels, cas d'usage, applications industrielles]
-
-##  Exercices de Compréhension
-**Exercice 1 — [Type]** : [Énoncé complet]
->  *Indice :* [...]
-
-**Exercice 2 — [Type]** : [Énoncé complet]
->  *Indice :* [...]
-
-**Exercice 3 — [Niveau avancé]** : [Énoncé complet]
-
-##  Activité Pratique
-**Titre :** [...] | **Durée :** [X min] | **Matériel :** [...]
-**Étapes :**
-1. [Instruction précise]
-2. [Instruction précise]
-3. [...]
-**Livrable attendu :** [Ce que l'élève doit produire]
-
-##  Résumé de la Leçon
-| Concept | Définition essentielle |
-|---|---|
-| [Terme 1] | [Définition courte] |
-| [Terme 2] | [Définition courte] |
-
-**À retenir :** [3 points clés]
-
-##  Questions de Révision
-1. [Question conceptuelle]
-2. [Question d'application]
-3. [Question d'analyse]
-
-##  Pour aller plus loin
-- [Ressource 1]
-- [Ressource 2]
-
-Génère maintenant le cours COMPLET en Markdown. Ne laisse aucune section vide.
+STRUCTURE JSON REQUISE :
+{{
+  "courseTitle": "Titre du cours",
+  "modules": [
+    {{
+      "order": 1,
+      "title": "Titre du module",
+      "content": "Contenu Markdown exhaustif incluant les citations...",
+      "summary": "Résumé rapide du module",
+      "exercises_text": [ {{ "question": "...", "options": [], "answer": "...", "explanation": "..." }} ]
+    }}
+  ],
+  "finalProject": {{
+     "title": "Nom du Projet",
+     "description": "Énoncé complet et motivant",
+     "steps": ["Étape 1", "Étape 2"],
+     "solution_hint": "Guide de réussite pour le professeur"
+  }}
+}}
 """
 
-    response = model.invoke(prompt)
-    
-    # On met à jour l'état avec le contenu ET les sources pour le Critique
+    response = text_model.invoke(llama_prompt)
+    try:
+        course_data = json.loads(_clean_json(response.content))
+    except Exception as e:
+        print(f"❌ Erreur de parsing JSON (Sophie Chen) : {e}")
+        course_data = {"courseTitle": "Erreur de génération", "modules": [], "finalProject": {}}
+
+    # --- Injection des exercices de code et des SOLUTIONS (Expert Qwen 3) ---
+    if state.get('include_code_exercises') and "modules" in course_data:
+        print(f"💻 Expert Code : Génération des défis et des solutions en {lang}...")
+        for module in course_data["modules"]:
+            module["exercises_code"] = _generate_code_exercises(
+                module.get("title", ""), 
+                module.get("content", ""), 
+                state['age_group'],
+                lang
+            )
+    else:
+        for module in course_data.get("modules", []):
+            module["exercises_code"] = []
+
+    # --- Webhook de télémétrie : Notification de progression (60%) ---
+    draft_id = state.get("draft_id")
+    if draft_id:
+        try:
+            requests.patch(
+                f"http://localhost:3000/api/ai/internal/drafts/{draft_id}/progress",
+                json={"progressPercent": 60}
+            )
+        except: pass
+
+    # On retourne le contenu complet et le projet final pour l'état global
     return {
-        "content": [response.content],
+        "content": [json.dumps(course_data, ensure_ascii=False)],
+        "final_project": json.dumps(course_data.get("finalProject", {})),
         "source_documents": source_docs_info
     }

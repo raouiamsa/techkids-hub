@@ -1,6 +1,3 @@
-// libs/database/prisma/schema.prisma
-// Conforme au PDF - Chapitre 6 (Page 15)
-
 // 1. Configuration de base
 generator client {
   provider = "prisma-client-js"
@@ -23,13 +20,13 @@ enum UserRole {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  passwordHash String
-  role         UserRole @default(STUDENT)
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  role          UserRole @default(STUDENT)
 
-  isEmailVerified          Boolean   @default(false)
-  emailVerificationToken   String?
+  isEmailVerified         Boolean   @default(false)
+  emailVerificationToken  String?
   emailVerificationExpires DateTime?
 
   refreshToken String?
@@ -48,14 +45,14 @@ model User {
   progressions  Progression[]
   submissions   Submission[]
 
-  // PFE AI Integration
+  // Relation pour les brouillons générés par l'IA
   reviewedDrafts GeneratedDraft[] @relation("DraftReviewer")
 }
 
 model Profile {
-  id     String @id @default(uuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id      String @id @default(uuid())
+  userId  String @unique
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   firstName   String
   lastName    String
@@ -97,20 +94,26 @@ enum ProgressStatus {
 }
 
 model Course {
-  id          String      @id @default(uuid())
-  title       String
-  description String?
-  level       CourseLevel @default(BEGINNER)
-  isPublished Boolean     @default(false)
-  imageUrl    String?
+  id              String      @id @default(uuid())
+  title           String
+  description     String?
+  level           CourseLevel @default(BEGINNER)
+  
+  // Données pédagogiques structurées (QCM & Projets)
+  placementBank     Json?       // Test de diagnostic initial
+  certificationBank Json?       // Examen final de certification
+  finalProject      Json?       // Énoncé et corrigé du projet de synthèse
+  
+  isPublished     Boolean     @default(false)
+  imageUrl        String?
 
   teacherId String
-  teacher   User   @relation("teacher_courses", fields: [teacherId], references: [id])
+  teacher   User      @relation("teacher_courses", fields: [teacherId], references: [id])
 
-  modules     Module[]
-  enrollments Enrollment[]
+  modules      Module[]
+  enrollments  Enrollment[]
   
-  // PFE 4 Relation
+  // Sources de connaissances liées
   contentSources ContentSource[]
 
   createdAt DateTime @default(now())
@@ -121,7 +124,7 @@ model Module {
   id      String  @id @default(uuid())
   title   String
   order   Int
-  content String?
+  content String? @db.Text // Contenu principal du module en Markdown
 
   courseId     String
   course       Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -139,7 +142,7 @@ model Exercise {
   title        String
   instructions String
   exerciseType ExerciseType @default(QUIZ)
-  solution     String?
+  solution     String?      // Code ou réponse attendue pour correction IA
 
   moduleId    String
   module      Module       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
@@ -195,47 +198,67 @@ model Submission {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  PHASE 4 : CONTENT GENERATION & AI (Conforme PDF 4.4)
+//  PHASE 4 : CONTENT GENERATION & AI (Pipeline Archiviste & Sophie)
 // ═══════════════════════════════════════════════════════════════
 
 enum SourceType {
   PDF
-  VIDEO
+  YOUTUBE
   WEBPAGE
 }
 
+enum IndexingStatus {
+  INDEXING  // En cours de vectorisation dans ChromaDB
+  READY     // Prêt pour la génération
+  ERROR     // Échec technique
+}
+
 enum DraftStatus {
-  PENDING_REVIEW
-  APPROVED
-  REJECTED
+  PROCESSING      // IA en train de rédiger
+  PENDING_REVIEW  // Attente de validation professeur
+  APPROVED        // Validé et transformé en modules
+  REJECTED        // Supprimé ou ignoré
 }
 
 model ContentSource {
-  id        String     @id @default(uuid())
-  title     String
-  type      SourceType @default(PDF)
-  url       String?  @unique
+  id             String         @id @default(uuid())
+  title          String
+  type           SourceType     @default(PDF)
+  url            String?        @unique
   
-  courseId  String?
-  course    Course?    @relation(fields: [courseId], references: [id])
-  
-  drafts    GeneratedDraft[]
+  // Suivi de la progression de l'ingestion (Archiviste)
+  indexingStatus IndexingStatus @default(INDEXING)
+  progressPercent Int           @default(0)
 
-  createdAt DateTime @default(now())
+  courseId       String?
+  course         Course?        @relation(fields: [courseId], references: [id])
+  
+  drafts         GeneratedDraft[]
+  createdAt      DateTime       @default(now())
 }
 
 model GeneratedDraft {
-  id        String      @id @default(uuid())
-  syllabus  Json?
-  content   String?     @db.Text
+  id            String      @id @default(uuid())
+  title         String?     // Titre proposé par l'IA
+  language      String?     // Langage technique détecté (ex: Python)
+  
+  // Structure complète générée (Syllabus, Modules, Projets)
+  syllabus      Json?
+  content       Json?       @db.JsonB // Modules + Exercices + SOLUTIONS détaillées
+  
+  placementBank     Json?       // Diagnostic généré
+  certificationBank Json?       // Examen de sortie généré
+  finalProject      Json?       // Projet final généré
 
-  status    DraftStatus @default(PENDING_REVIEW)
+  status         DraftStatus @default(PENDING_REVIEW)
+  progressPercent Int         @default(0) // Progression globale (Architecte -> Writer -> Critic)
   
   teacherId String
   teacher   User        @relation("DraftReviewer", fields: [teacherId], references: [id])
   
-  sourceId  String
-  source    ContentSource @relation(fields: [sourceId], references: [id])
+  // On utilise SetNull pour garder le brouillon même si la source originale est supprimée
+  sourceId  String?
+  source    ContentSource? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

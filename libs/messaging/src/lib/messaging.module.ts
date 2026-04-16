@@ -17,7 +17,7 @@ import { QUEUES } from './messaging.constants';
                 name: 'RABBITMQ_CLIENT',
                 transport: Transport.RMQ,
                 options: {
-                    urls: [process.env['RABBITMQ_URL'] || 'amqp://guest:guest@localhost:5672'],
+                    urls: [process.env['RABBITMQ_URL'] || 'amqp://techkids:techkids@localhost:5672/'],
                     queue: QUEUES.MAIN,
                     queueOptions: {
                         durable: true, // La queue survit au redémarrage de RabbitMQ
@@ -27,6 +27,6 @@ import { QUEUES } from './messaging.constants';
         ]),
     ],
     providers: [MessagingService],
-    exports: [MessagingService],
+    exports: [MessagingService, ClientsModule],  // Export ClientsModule pour que RABBITMQ_CLIENT soit injectable
 })
 export class MessagingModule { }

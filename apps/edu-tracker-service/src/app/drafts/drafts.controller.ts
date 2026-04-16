@@ -29,9 +29,38 @@ export class DraftsController {
     });
   }
 
+  @MessagePattern('DRAFTS_CREATE_PROCESSING')
+  async createProcessingDraft(@Payload() data: {
+    teacherId: string;
+    source: { title: string; type: SourceType; url: string };
+  }) {
+    const source = await this.draftsService.upsertSource({
+       ...data.source,
+    });
+    return this.draftsService.createProcessingDraft({
+      teacherId: data.teacherId,
+      sourceId: source.id,
+    });
+  }
+
+  @MessagePattern('DRAFTS_UPDATE_PROGRESS')
+  async updateProgress(@Payload() data: {
+    id: string;
+    progressPercent: number;
+    syllabus?: any;
+    content?: string;
+  }) {
+    return this.draftsService.updateDraftProgress(data.id, data.progressPercent, data.syllabus, data.content);
+  }
+
   @MessagePattern(EDU_PATTERNS.DRAFTS_LIST)
   async getDrafts(@Payload() data: { teacherId: string }) {
     return this.draftsService.getTeacherDrafts(data.teacherId);
+  }
+
+  @MessagePattern('DRAFTS_GET')
+  async getDraft(@Payload() data: { draftId: string }) {
+    return this.draftsService.getDraft(data.draftId);
   }
 
   @MessagePattern(EDU_PATTERNS.DRAFTS_PUBLISH)

@@ -37,4 +37,8 @@ export const EVENTS = {
     DRAFT_CREATED: 'draft.created',
     /** content-generator → edu-tracker : module publié */
     MODULE_PUBLISHED: 'module.published',
+    /** api-gateway → ai-brain : vectorisation d'une source demandée */
+    SOURCE_INDEXING_REQUESTED: 'source.indexing.requested',
+    /** ai-brain → api-gateway : vectorisation terminée (READY ou ERROR) */
+    SOURCE_INDEXING_DONE: 'source.indexing.done',
 } as const;
