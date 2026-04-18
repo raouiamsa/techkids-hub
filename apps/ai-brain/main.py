@@ -25,9 +25,9 @@ async def notify_gateway(source_id: str, status: str):
     async with aiohttp.ClientSession() as session:
         try:
             await session.patch(url, json={"status": status})
-            print(f"✅ Webhook notifié : source {source_id} → {status}")
+            print(f"Webhook notifie : source {source_id} -> {status}")
         except Exception as e:
-            print(f"⚠️ Erreur lors de la notification du statut : {e}")
+            print(f"Erreur lors de la notification du statut : {e}")
 
 async def process_rabbitmq_message(message: aio_pika.IncomingMessage):
     """Traite les messages de RabbitMQ pour lancer l'ingestion asynchrone."""
@@ -44,30 +44,29 @@ async def process_rabbitmq_message(message: aio_pika.IncomingMessage):
             source_type = data.get("type", "PDF")
             file_path   = data.get("filePath")
             url         = data.get("url")
-            course_id   = data.get("courseId")
+            
+            print(f"Background : Debut de l'indexation pour {source_id} ({source_type})...")
 
-            print(f"🔄 Background : Début de l'indexation pour {source_id} ({source_type})...")
-
-            # Le chemin dépend du type de source
+            # Le chemin depend du type de source
             source_path = file_path if source_type.upper() == "PDF" else url
             
             # Utilisation de asyncio.to_thread pour ne pas bloquer l'Event Loop
             await asyncio.to_thread(ingest_source, source_type, source_path, source_id)
 
-            print(f"✅ Background : Indexation terminée pour {source_id}")
+            print(f"Background : Indexation terminee pour {source_id}")
             await notify_gateway(source_id, "READY")
 
         except Exception as e:
             import traceback
-            print(f"❌ Background Error : {e}")
+            print(f"Background Error : {e}")
             traceback.print_exc()
             source_id = data.get("sourceId") if 'data' in locals() and isinstance(data, dict) else None
             if source_id:
                 await notify_gateway(source_id, "ERROR")
 
 async def start_background_worker():
-    """Écoute continue de la file RabbitMQ."""
-    print("🚀 Worker en arrière-plan démarré, prêt pour l'indexation...")
+    """Ecoute continue de la file RabbitMQ."""
+    print("Worker en arriere-plan demarre, pret pour l'indexation...")
     try:
         connection = await aio_pika.connect_robust(RABBITMQ_URL)
         async with connection:
@@ -78,28 +77,28 @@ async def start_background_worker():
                 async for message in queue_iter:
                     await process_rabbitmq_message(message)
     except Exception as e:
-        print(f"🛑 Problème de connexion au Worker : {e}")
+        print(f"Probleme de connexion au Worker : {e}")
 
 # --- Gestion du cycle de vie (FastAPI Lifespan) ---
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Lancement du Worker RabbitMQ au démarrage de l'API
+    # Lancement du Worker RabbitMQ au demarrage de l'API
     worker_task = asyncio.create_task(start_background_worker())
-    print("✨ API et Worker synchronisés.")
+    print("API et Worker synchronises.")
     yield
-    # Arrêt propre
+    # Arret propre
     worker_task.cancel()
     try:
         await worker_task
     except asyncio.CancelledError:
-        print("👋 Worker arrêté proprement.")
+        print("Worker arrete proprement.")
 
 # --- Configuration de l'API ---
 
-app = FastAPI(title="TechKids AI Brain - Système Intégré", lifespan=lifespan)
+app = FastAPI(title="TechKids AI Brain", lifespan=lifespan)
 
-# --- Modèles de données (Pydantic) ---
+# --- Modeles de données (Pydantic) ---
 
 class IngestRequest(BaseModel):
     file_path: Optional[str] = None
@@ -125,7 +124,7 @@ class PracticeRequest(BaseModel):
     is_success: bool = False
     language: str = "Python"
 
-# --- Points d'Entrée (Endpoints) ---
+# --- Points d'Entree (Endpoints) ---
 
 @app.get("/")
 async def root():
@@ -137,13 +136,13 @@ async def api_ingest(req: IngestRequest):
     try:
         source_path = req.file_path if req.type.upper() == "PDF" else req.url
         await asyncio.to_thread(ingest_source, req.type, source_path, req.course_id)
-        return {"status": "success", "message": f"Source {req.course_id} ingérée avec succès."}
+        return {"status": "success", "message": f"Source {req.course_id} ingeree avec succes."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/generate")
 async def api_generate(req: CourseRequest):
-    """Génération de cours via LangGraph (Sophie Chen)."""
+    """Generation de cours riche via LangGraph (Sophie Chen)."""
     try:
         graph = create_course_graph()
         initial_state = {
@@ -156,8 +155,8 @@ async def api_generate(req: CourseRequest):
             "draft_id": req.draft_id,
             "content": [],
             "iterations": 0,
-            "source_documents": [], # Nécessaire pour les citations
-            "programming_language": req.programming_language or "" # Détecté dynamiquement sinon
+            "source_documents": [],
+            "programming_language": req.programming_language or "Python"
         }
         
         # Invocation du graphe d'agents
@@ -168,8 +167,10 @@ async def api_generate(req: CourseRequest):
             "syllabus": result.get("syllabus"),
             "content": result.get("content", [])[-1] if result.get("content") else "",
             "placement_bank": result.get("placement_bank"),
+            "certification_bank": result.get("certification_bank"),
+            "final_project": result.get("final_project"),
             "programming_language": result.get("programming_language"),
-            "sources": result.get("source_documents", []) # 🌟 Retourne les citations précises pour le Front
+            "sources": result.get("source_documents", []) # Retourne les citations precises pour le Front
         }
     except Exception as e:
         import traceback
@@ -178,23 +179,23 @@ async def api_generate(req: CourseRequest):
 
 @app.post("/generate-practice")
 async def api_generate_practice(req: PracticeRequest):
-    """Génération d'exercices d'entraînement dynamiques (Practice More)."""
+    """Generation d'un Mini-Module Practice More (Remediation ou Renforcement)."""
     try:
-        from agents.practice import generate_practice_exercise
-        exercise = await asyncio.to_thread(
-            generate_practice_exercise,
+        from agents.practice import generate_practice_module
+        module = await asyncio.to_thread(
+            generate_practice_module,
             req.concept,
             req.age_group,
             req.level,
             req.student_mistake,
             req.is_success,
-            req.language 
+            req.language
         )
-        return {"status": "success", "exercise": exercise}
+        return {"status": "success", "module": module}
     except Exception as e:
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="localhost", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

@@ -252,6 +252,7 @@ model GeneratedDraft {
 
   status         DraftStatus @default(PENDING_REVIEW)
   progressPercent Int         @default(0) // Progression globale (Architecte -> Writer -> Critic)
+  aiScore        Int?        // Score qualité 0-100 calculé par Llama 3.3 (Critique)
   
   teacherId String
   teacher   User        @relation("DraftReviewer", fields: [teacherId], references: [id])

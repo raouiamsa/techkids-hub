@@ -8,7 +8,9 @@ export class DraftsService {
 
   constructor(private prisma: PrismaService) { }
 
-  //Créer ou mettre à jour une source de contenu (PDF, URL)
+  /**
+   * Créer ou mettre à jour une source de contenu (PDF, URL)
+   */
   async upsertSource(data: { title: string; type: SourceType; url: string; courseId?: string }) {
     this.logger.log(`Upsert source: ${data.title}`);
     return this.prisma.contentSource.upsert({
@@ -18,6 +20,9 @@ export class DraftsService {
     });
   }
 
+  /**
+   * Initialise un brouillon en statut PROCESSING (0%)
+   */
   async createProcessingDraft(data: { teacherId: string; sourceId: string }) {
     this.logger.log(`Création d'un brouillon PROCESSING pour le prof: ${data.teacherId}`);
     return this.prisma.generatedDraft.create({
@@ -30,14 +35,42 @@ export class DraftsService {
     });
   }
 
-  async updateDraftProgress(id: string, progress: number, syllabus?: any, content?: string) {
-    this.logger.log(`Mise à jour de la progression du brouillon ${id} : ${progress}%`);
-    const updateData: any = { progressPercent: progress };
+  /**
+   * Met à jour la progression et enregistre le contenu riche au fur et à mesure
+   * Supporte : syllabus, content (array), placementBank, certificationBank, finalProject
+   */
+  async updateDraftProgress(
+    id: string,
+    progress: number,
+    syllabus?: any,
+    content?: string,
+    placementBank?: any,
+    certificationBank?: any,
+    finalProject?: any,
+    aiScore?: number
+  ) {
+    this.logger.log(`Mise à jour du brouillon ${id} : ${progress}%`);
 
+    // Préparation des données de mise à jour
+    const updateData: any = {
+      progressPercent: progress
+    };
+
+    // Si on a des données partielles ou finales, on les sérialise si nécessaire
+    if (syllabus) updateData.syllabus = typeof syllabus === 'string' ? syllabus : JSON.stringify(syllabus);
+
+    // Pour le content, on utilise 'push' car c'est un tableau de strings dans le schéma
+    if (content) updateData.content = { push: content };
+
+    // On stocke les banques et le projet (souvent envoyés en fin de processus)
+    if (placementBank) updateData.placementBank = typeof placementBank === 'string' ? placementBank : JSON.stringify(placementBank);
+    if (certificationBank) updateData.certificationBank = typeof certificationBank === 'string' ? certificationBank : JSON.stringify(certificationBank);
+    if (finalProject) updateData.finalProject = typeof finalProject === 'string' ? finalProject : JSON.stringify(finalProject);
+    if (aiScore !== undefined && aiScore !== null) updateData.aiScore = aiScore;
+
+    // Si on atteint 100%, on passe en attente de révision
     if (progress >= 100) {
       updateData.status = DraftStatus.PENDING_REVIEW;
-      if (syllabus) updateData.syllabus = syllabus;
-      if (content) updateData.content = content;
     }
 
     return this.prisma.generatedDraft.update({
@@ -47,7 +80,7 @@ export class DraftsService {
   }
 
   /**
-   * Créer un nouveau brouillon généré par l'IA (Ancienne méthode synchrone)
+   * Créer un brouillon (Méthode synchrone historique)
    */
   async createDraft(data: {
     syllabus: any;
@@ -55,26 +88,19 @@ export class DraftsService {
     teacherId: string;
     sourceId: string;
   }) {
-    this.logger.log(`Création d'un nouveau brouillon pour le prof: ${data.teacherId}`);
-    try {
-      const result = await this.prisma.generatedDraft.create({
-        data: {
-          syllabus: data.syllabus,
-          content: data.content,
-          teacherId: data.teacherId,
-          sourceId: data.sourceId,
-          status: DraftStatus.PENDING_REVIEW,
-        },
-      });
-      return result;
-    } catch (error: any) {
-      this.logger.error(" ERREUR FATALE PRISMA DANS createDraft ");
-      console.error("Détails de l'erreur Prisma:", error);
-      throw error;
-    }
+    this.logger.log(`Création synchrone pour le prof: ${data.teacherId}`);
+    return this.prisma.generatedDraft.create({
+      data: {
+        syllabus: typeof data.syllabus === 'string' ? data.syllabus : JSON.stringify(data.syllabus),
+        content: [data.content],
+        teacherId: data.teacherId,
+        sourceId: data.sourceId,
+        status: DraftStatus.PENDING_REVIEW,
+        progressPercent: 100
+      },
+    });
   }
 
-  //Lister les brouillons d'un professeur
   async getTeacherDrafts(teacherId: string) {
     return this.prisma.generatedDraft.findMany({
       where: { teacherId },
@@ -90,17 +116,16 @@ export class DraftsService {
     });
   }
 
-  //Approuver ou rejeter un brouillon
-  async updateStatus(id: string, status: DraftStatus) {
-    return this.prisma.generatedDraft.update({
+  async deleteDraft(id: string) {
+    this.logger.log(`Suppression du brouillon ${id}`);
+    return this.prisma.generatedDraft.delete({
       where: { id },
-      data: { status },
     });
   }
 
-  // ── Publication Full-JSON ─────────────────────────────────────────────────
-  // Désérialise le JSON du Rédacteur (Gemini + Qwen) et crée dans PostgreSQL :
-  // 1 Course  →  N Module  →  M Exercise (TEXT, QUIZ, CODE)
+  /**
+   * 🚀 PUBLICATION : Transforme le Brouillon JSON en entités Course/Module/Exercise
+   */
   async publish(draftId: string) {
     const draft = await this.prisma.generatedDraft.findUnique({
       where: { id: draftId },
@@ -108,101 +133,84 @@ export class DraftsService {
     });
 
     if (!draft) throw new Error('Brouillon introuvable');
-    this.logger.log(` Publication Full-JSON du brouillon ${draftId} vers le LMS...`);
-    // Le champ "content" stocke le JSON Full-Format généré par writer.py
+    this.logger.log(`Publication du brouillon ${draftId} vers le LMS...`);
+
+    // 1. Parsing du contenu (On prend la dernière version du tableau content)
     let courseData: any = {};
     try {
-      const contentStr = typeof draft.content === 'string'
-        ? draft.content
-        : JSON.stringify(draft.content);
-      courseData = JSON.parse(contentStr);
+      const contentArray = draft.content as any[] | null;
+      if (!contentArray || contentArray.length === 0) {
+        throw new Error('Contenu vide');
+      }
+      const rawContent = contentArray[contentArray.length - 1];
+      courseData = typeof rawContent === 'string' ? JSON.parse(rawContent) : rawContent;
     } catch (e) {
-      this.logger.warn(' Impossible de parser le JSON. Mode fallback activé.');
-      courseData = { courseTitle: draft.source?.title || 'Cours IA', modules: [] };
+      this.logger.warn('Erreur de parsing JSON, utilisation des métadonnées de secours.');
+      courseData = { courseTitle: (draft as any).title || draft.source?.title || 'Cours IA', modules: [] };
     }
 
-    const modules: any[] = courseData.modules || [];
-    const courseTitle = courseData.courseTitle
-      || draft.source?.title?.replace('.pdf', '')
-      || 'Cours IA';
-    const courseDesc = (courseData.objectives || []).join('. ')
-      || `Cours IA (${courseData.level || 'Tous niveaux'})`;
+    const modules = courseData.modules || [];
+    const title = courseData.courseTitle || draft.title || draft.source?.title || 'Sans titre';
 
-    // ── ÉTAPE 2 : Créer le Course parent ─────────────────────────────────────
+    // 2. CRÉATION DU COURS FINAL
     const course = await this.prisma.course.create({
       data: {
-        title: courseTitle,
-        description: courseDesc,
+        title: title,
+        description: courseData.objectives?.join('. ') || `Cours de niveau ${courseData.level || 'Standard'}`,
         teacherId: draft.teacherId,
         isPublished: true,
+        // On transfère les banques et le projet (undefined si null pour éviter l'erreur Prisma Json)
+        placementBank: draft.placementBank ?? undefined,
+        certificationBank: draft.certificationBank ?? undefined,
+        finalProject: draft.finalProject ?? undefined,
       },
     });
-    this.logger.log(`Course créé : "${courseTitle}" (ID: ${course.id})`);
 
-    // ── ÉTAPE 3 : Créer chaque Module + ses Exercises ────────────────────────
-    for (const [index, moduleData] of modules.entries()) {
-
-      // 3a. Module physique en base de données
+    // 3. CRÉATION DES MODULES ET EXERCICES
+    for (const [idx, m] of modules.entries()) {
       const createdModule = await this.prisma.module.create({
         data: {
-          title: moduleData.title || `Module ${index + 1}`,
-          order: moduleData.order || index + 1,
-          content: moduleData.content || '',
+          title: m.title || `Module ${idx + 1}`,
+          order: m.order || idx + 1,
+          content: m.content || '',
           courseId: course.id,
         },
       });
-      this.logger.log(`   Module ${index + 1} créé : "${moduleData.title}"`);
 
-
-      const exText: any[] = moduleData.exercises_text || [];
-      for (const ex of exText) {
-
-        const exerciseType = ex.type === 'CODE' ? 'CODE_CHALLENGE' : 'QUIZ';
+      // Insertion des exercices Text/Quiz
+      const exercisesText = m.exercises_text || [];
+      for (const ex of exercisesText) {
         await this.prisma.exercise.create({
           data: {
-            title: ex.title || 'Exercice',
-            instructions: JSON.stringify(ex.questions || {}), // On sérialise les questions en String
-            exerciseType: exerciseType as any,
-            solution: null,
+            title: ex.title || 'Quiz de révision',
+            instructions: JSON.stringify(ex.questions || ex),
+            exerciseType: (ex.type === 'CODE' ? 'CODE_CHALLENGE' : 'QUIZ') as any,
             moduleId: createdModule.id,
           },
         });
       }
 
-      // 3c. Exercices CODE → CODE_CHALLENGE (via Qwen 2.5 Coder)
-      const exCode: any[] = moduleData.exercises_code || [];
-      for (const codeEx of exCode) {
+      // Insertion des exercices de Code (Qwen)
+      const exercisesCode = m.exercises_code || [];
+      for (const codeEx of exercisesCode) {
         await this.prisma.exercise.create({
           data: {
-            title: codeEx.title || 'Exercice de code',
-            instructions: codeEx.instructions || '',  // Instructions textuelles
+            title: codeEx.title || 'Défi de programmation',
+            instructions: codeEx.instructions || '',
+            solution: codeEx.solution || '',
             exerciseType: 'CODE_CHALLENGE',
-            solution: codeEx.solution || null,        // La solution complète en String
             moduleId: createdModule.id,
           },
         });
-      }
-
-      const totalEx = exText.length + exCode.length;
-      if (totalEx > 0) {
-        this.logger.log(`${totalEx} exercice(s) créé(s) pour le module ${index + 1}`);
       }
     }
 
-    // ── ÉTAPE 4 : Archiver le brouillon comme APPROVED ───────────────────────
+    // 4. ARCHIVAGE DU BROUILLON
     await this.prisma.generatedDraft.update({
       where: { id: draftId },
       data: { status: DraftStatus.APPROVED },
     });
 
-    this.logger.log(`Cours "${courseTitle}" publié avec ${modules.length} module(s) !`);
-    return { course, modulesCount: modules.length };
-  }
-
-  async deleteDraft(id: string) {
-    this.logger.log(`Suppression du brouillon ${id}`);
-    return this.prisma.generatedDraft.delete({
-      where: { id },
-    });
+    return { courseId: course.id, success: true };
   }
 }

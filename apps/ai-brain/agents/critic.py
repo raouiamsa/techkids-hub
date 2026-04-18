@@ -95,12 +95,15 @@ RÉPONDS UNIQUEMENT EN JSON :
         verdict = json.loads(_clean_json(response.content))
         approved = verdict.get("approved", True)
         
-        # Télémétrie : Mise à jour de la progression finale (95%)
+        # Télémétrie : Mise à jour de la progression finale + AI Score
         if draft_id:
             try:
                 requests.patch(
-                    f"http://localhost:3000/api/ai/internal/drafts/{draft_id}/progress", 
-                    json={"progressPercent": 95 if not approved else 100}
+                    f"http://localhost:3000/api/ai/internal/drafts/{draft_id}/progress",
+                    json={
+                        "progressPercent": 95 if not approved else 100,
+                        "aiScore": verdict.get("score", None)  # Score 0-100 du Critique
+                    }
                 )
             except: pass
 
