@@ -1,0 +1,37 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/web"
+    },
+    {
+      "path": "./apps/api-gateway-e2e"
+    },
+    {
+      "path": "./apps/api-gateway"
+    },
+    {
+      "path": "./libs/database"
+    },
+    {
+      "path": "./libs/auth"
+    },
+    {
+      "path": "./libs/shared-types"
+    },
+    {
+      "path": "./apps/auth-service-e2e"
+    },
+    {
+      "path": "./apps/auth-service"
+    },
+    {
+      "path": "./apps/edu-tracker-service-e2e"
+    },
+    {
+      "path": "./apps/edu-tracker-service"
+    }
+  ]
+}

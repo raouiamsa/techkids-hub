@@ -1,0 +1,275 @@
+// 1. Configuration de base
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PHASE 0-1 : NOYAU SYSTÈME (User, Auth, Profile)
+// ═══════════════════════════════════════════════════════════════
+
+enum UserRole {
+  PARENT
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+model User {
+  id               String   @id @default(uuid())
+  email            String   @unique
+  passwordHash     String
+  role             UserRole @default(STUDENT)
+
+  isEmailVerified          Boolean   @default(false)
+  emailVerificationToken   String?
+  emailVerificationExpires DateTime?
+
+  refreshToken String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile Profile?
+
+  // Relations parent-enfant
+  students User[]  @relation("ParentStudents")
+  parent   User?   @relation("ParentStudents", fields: [parentId], references: [id])
+  parentId String?
+
+  // Relations pédagogiques
+  taughtCourses Course[]      @relation("teacher_courses")
+  enrollments   Enrollment[]
+  progressions  Progression[]
+  submissions   Submission[]
+
+  // 🌟 Relation avec les brouillons (Fine-tuning Traceability)
+  reviewedDrafts GeneratedDraft[] @relation("DraftReviewer")
+}
+
+model Profile {
+  id          String @id @default(uuid())
+  userId      String @unique
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  firstName   String
+  lastName    String
+  phoneNumber String?
+  address     String?
+  avatar      String?
+  dateOfBirth DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PHASE 2 : EDU-TRACKER & LMS
+// ═══════════════════════════════════════════════════════════════
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum ExerciseType {
+  QUIZ
+  CIRCUIT_BUILD
+  CODE_CHALLENGE
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  DROPPED
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Course {
+  id                String      @id @default(uuid())
+  title             String
+  description       String?
+  level             CourseLevel @default(BEGINNER)
+  
+  // Données pédagogiques structurées (Générées par Sophie Chen)
+  placementBank     Json?       // Test de diagnostic initial
+  certificationBank Json?       // Examen final de certification
+  finalProject      Json?       // Énoncé et corrigé du projet de synthèse
+  
+  isPublished     Boolean     @default(false)
+  imageUrl        String?
+
+  teacherId String
+  teacher   User      @relation("teacher_courses", fields: [teacherId], references: [id])
+
+  modules      Module[]
+  enrollments  Enrollment[]
+  
+  contentSources ContentSource[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Module {
+  id      String  @id @default(uuid())
+  title   String
+  order   Int
+  content String? @db.Text // Contenu Markdown long
+
+  courseId     String
+  course       Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  exercises    Exercise[]
+  progressions Progression[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId, order])
+}
+
+model Exercise {
+  id           String       @id @default(uuid())
+  title        String
+  instructions String       @db.Text
+  exerciseType ExerciseType @default(QUIZ)
+  solution     String?      @db.Text 
+
+  moduleId    String
+  module      Module       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  submissions Submission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Enrollment {
+  id         String           @id @default(uuid())
+  status     EnrollmentStatus @default(ACTIVE)
+  enrolledAt DateTime         @default(now())
+
+  studentId String
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseId])
+}
+
+model Progression {
+  id                String         @id @default(uuid())
+  completionPercent Float          @default(0)
+  status            ProgressStatus @default(NOT_STARTED)
+  completedAt       DateTime?
+
+  studentId String
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, moduleId])
+}
+
+model Submission {
+  id          String   @id @default(uuid())
+  answer      String   @db.Text
+  score       Float?
+  attempt     Int      @default(1)
+  submittedAt DateTime @default(now())
+
+  studentId String
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PHASE 4 : CONTENT GENERATION & AI (Fine-Tuning Ready)
+// ═══════════════════════════════════════════════════════════════
+
+enum SourceType {
+  PDF
+  YOUTUBE
+  WEBPAGE
+}
+
+enum IndexingStatus {
+  INDEXING
+  READY
+  ERROR
+}
+
+enum DraftStatus {
+  PROCESSING
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+}
+
+model ContentSource {
+  id              String         @id @default(uuid())
+  title           String
+  type            SourceType     @default(PDF)
+  url             String?        @unique
+  
+  indexingStatus  IndexingStatus @default(INDEXING)
+  progressPercent Int            @default(0)
+
+  courseId        String?
+  course          Course?        @relation(fields: [courseId], references: [id])
+  
+  drafts          GeneratedDraft[]
+  createdAt       DateTime       @default(now())
+}
+
+model GeneratedDraft {
+  id              String      @id @default(uuid())
+  title           String?     
+  language        String?     // ex: Python
+
+  // 🌟 DATASETS POUR LE FINE-TUNING (The "Asset")
+  // 1. Le Prompt Initial (Subject + Age + Level + Notes)
+  initialPrompt   String?     @db.Text   
+  
+  // 2. La critique globale du professeur (Instruction pour Sophie V2)
+  generalFeedback String?     @db.Text   
+
+  // 3. Les critiques ciblées par module {"Module 1": "Trop court", ...}
+  moduleFeedbacks Json?                  
+
+  // 4. Les versions générées (History)
+  syllabus        Json?
+  content         Json?       @db.JsonB // Version finale approuvée = "Golden Response"
+  
+  placementBank     Json?       
+  certificationBank Json?       
+  finalProject      Json?       
+
+  status          DraftStatus @default(PENDING_REVIEW)
+  progressPercent Int         @default(0)
+  aiScore         Int?        // Score de qualité calculé par le Critic Agent
+
+  teacherId String
+  teacher   User        @relation("DraftReviewer", fields: [teacherId], references: [id])
+  
+  sourceId  String?
+  source    ContentSource? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

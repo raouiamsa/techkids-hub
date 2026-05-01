@@ -1,0 +1,26 @@
+fastapi
+uvicorn
+langchain
+langchain-google-genai
+langgraph
+chromadb
+pypdf
+youtube-transcript-api
+beautifulsoup4
+pydantic
+python-dotenv
+requests
+langchain-huggingface
+sentence-transformers
+langchain-chroma
+langchain-community
+pymupdf
+# Vision locale (Florence-2) — gratuit, illimité, 700Mo
+transformers>=4.38.0
+timm
+einops
+Pillow
+langchain_groq
+youtube-transcript-api
+beautifulsoup4
+langchain-cerebras

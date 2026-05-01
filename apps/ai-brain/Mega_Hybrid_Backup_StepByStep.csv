@@ -1,0 +1,1058 @@
+Run_ID,Test_Mode,Subject,Age,Role,Model,Generated_Output,Judge_Score_100,RAGAS_Faithfulness,RAGAS_Relevancy,RAGAS_Precision,RAGAS_Recall,LIX_Readability,Critic_Performance_Score,Code_Syntax_Valid
+1,ISOLE_PDF,Theory,10,Writer,NVIDIA: Mistral Nemotron,"```json
+{
+  ""order"": 2,
+  ""title"": ""Data Science Intro"",
+  ""summary"": ""Ce module introduit les concepts de base de la science des données en utilisant des exemples concrets et des analogies adaptées aux enfants. Il couvre l'importance des données, les rôles des scientifiques des données, et des exemples pratiques comme les réseaux sociaux et les salaires."",
+  ""content"": ""# Data Science Intro\n\n## 1. Introduction à la Science des Données\n\nImaginez que vous êtes un détective et que vous avez une boîte remplie de petits morceaux de papier. Chaque morceau de papier contient une information différente : un nom, un nombre, une date, etc. Votre mission est de trier ces morceaux de papier pour trouver des indices et résoudre un mystère. C'est un peu ce que fait un scientifique des données, mais avec des ordinateurs et des données numériques (Source: Doyle, P.1).\n\nLa science des données est l'art de transformer des données brutes en informations utiles. Par exemple, quand vous jouez à un jeu vidéo et que le jeu vous suggère des amis à ajouter, c'est grâce à la science des données (Source: Doyle, P.2).\n\n## 2. Les Rôles des Scientifiques des Données\n\nLes scientifiques des données peuvent avoir des rôles très différents. Certains sont comme des mathématiciens, d'autres comme des ingénieurs en logiciel. Certains sont experts en apprentissage automatique, tandis que d'autres sont plus généralistes (Source: Doyle, P.3).\n\nPar exemple, un scientifique des données peut travailler pour un site de rencontres comme OkCupid pour aider les gens à trouver l'amour en analysant leurs réponses à des questions. D'autres peuvent travailler pour des entreprises comme Facebook pour comprendre les migrations mondiales en analysant les emplacements des utilisateurs (Source: Doyle, P.4).\n\n## 3. Exemple Pratique : Réseaux Sociaux\n\nPrenons l'exemple de DataSciencester, un réseau social pour scientifiques des données. Vous avez une liste d'utilisateurs et leurs amis. Par exemple :\n\n```python\nusers = [\n    { \""id\"": 0, \""name\"": \""Hero\"" },\n    { \""id\"": 1, \""name\"": \""Dunn\"" },\n    { \""id\"": 2, \""name\"": \""Sue\"" },\n    { \""id\"": 3, \""name\"": \""Chi\"" },\n    { \""id\"": 4, \""name\"": \""Thor\"" },\n    { \""id\"": 5, \""name\"": \""Clive\"" },\n    { \""id\"": 6, \""name\"": \""Hicks\"" },\n    { \""id\"": 7, \""name\"": \""Devin\"" },\n    { \""id\"": 8, \""name\"": \""Kate\"" },\n    { \""id\"": 9, \""name\"": \""Klein\"" }\n]\n```\n\nEt une liste d'amitiés :\n\n```python\nfriendships = [(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (3, 4), (4, 5), (5, 6), (5, 7), (6, 8), (7, 8), (8, 9)]\n```\n\nVous pouvez utiliser ces données pour trouver des \""connexions clés\"" dans le réseau. Par exemple, vous pouvez calculer le nombre d'amis de chaque utilisateur et trouver ceux qui ont le plus d'amis (Source: Doyle, P.5).\n\n## 4. Exemple Pratique : Salaires et Expérience\n\nUn autre exemple est l'analyse des salaires et de l'expérience. Imaginez que vous avez une liste de salaires et d'années d'expérience :\n\n```python\nsalaries_and_tenures = [(83000, 8.7), (88000, 8.1), (48000, 0.7), (76000, 6), (69000, 6.5), (76000, 7.5), (60000, 2.5), (83000, 10), (48000, 1.9), (63000, 4.2)]\n```\n\nVous pouvez analyser ces données pour voir comment le salaire varie avec l'expérience. Par exemple, vous pouvez créer des groupes d'années d'expérience et calculer le salaire moyen pour chaque groupe (Source: Doyle, P.6).\n\n## 5. Conclusion\n\nLa science des données est un domaine passionnant qui combine des compétences en mathématiques, en informatique et en analyse de données. Les scientifiques des données utilisent ces compétences pour extraire des informations utiles à partir de données brutes. Que ce soit pour aider les gens à trouver l'amour, comprendre les migrations mondiales ou analyser les salaires, la science des données a de nombreuses applications (Source: Doyle, P.7).\n\nEn résumé, la science des données est comme être un détective avec des données. Vous triez, analysez et trouvez des indices pour résoudre des mystères et prendre des décisions éclairées."",
+  ""exercises_text"": [
+    ""Créez une liste d'utilisateurs et leurs amis, puis trouvez l'utilisateur avec le plus d'amis."",
+    ""Analysez une liste de salaires et d'années d'expérience pour trouver le salaire moyen pour chaque groupe d'années d'expérience."",
+    ""Imaginez que vous êtes un scientifique des données pour un site de rencontres. Comment pourriez-vous utiliser les données pour aider les gens à trouver l'amour ?"",
+    ""Créez une liste d'intérêts pour différents utilisateurs et trouvez les intérêts les plus populaires."",
+    ""Expliquez à un ami pourquoi la science des données est importante et donnez-lui un exemple concret.""
+  ]
+}
+```",92,0.5,0.8963,1.0,0.0,0,0,0
+1,E2E_CHROMADB,Theory,10,Writer,NVIDIA: Mistral Nemotron,"```json
+{
+  ""order"": 2,
+  ""title"": ""Data Science Intro"",
+  ""summary"": ""Ce module introduit les concepts de base de la data science en utilisant des exemples concrets et des analogies adaptées aux enfants. Il explique ce qu'est la data science, son importance et comment elle est utilisée dans la vie quotidienne."",
+  ""content"": ""# Data Science Intro
+
+## Introduction à la Data Science
+
+Imaginez que vous avez une boîte remplie de jouets. Certains sont des voitures, d'autres des poupées, et d'autres encore des blocs de construction. Pour mieux comprendre ce que vous avez, vous commencez à trier les jouets par type. Vous comptez combien il y a de voitures, de poupées et de blocs. Vous remarquez peut-être que certaines voitures sont rouges et d'autres bleues. Vous découvrez des choses intéressantes sur votre boîte de jouets, comme le fait que vous avez plus de voitures que de poupées.
+
+La data science, c'est un peu comme trier et étudier une boîte de jouets, mais avec des données. Les données, ce sont des informations que nous collectons, comme les notes à l'école, les likes sur les réseaux sociaux, ou les achats dans un magasin. Les data scientists sont des personnes qui étudient ces données pour trouver des choses intéressantes et utiles.
+
+**Source: Nom, P.1**
+
+## Qu'est-ce que la Data Science?
+
+La data science est une discipline qui combine des compétences en programmation, en mathématiques et en statistiques pour extraire des informations utiles à partir de données brutes. Les data scientists utilisent des outils comme Python pour analyser les données et trouver des modèles ou des tendances.
+
+Par exemple, le site de rencontres OkCupid utilise la data science pour aider les gens à trouver des partenaires compatibles. Ils demandent aux utilisateurs de répondre à des milliers de questions, puis analysent ces réponses pour trouver les meilleures correspondances. Ils utilisent également ces données pour découvrir des questions qui peuvent prédire si deux personnes vont bien s'entendre.
+
+**Source: Nom, P.1**
+
+## Pourquoi la Data Science est-elle Importante?
+
+La data science est importante parce qu'elle nous aide à comprendre le monde qui nous entoure. Elle est utilisée dans de nombreux domaines, comme la santé, les finances, les réseaux sociaux et même les jeux vidéo.
+
+Par exemple, Facebook utilise la data science pour comprendre où vivent les gens et comment ils se déplacent. Ils analysent les informations que les utilisateurs partagent, comme leur ville natale et leur lieu de résidence actuel, pour identifier les tendances de migration mondiale.
+
+**Source: Nom, P.1**
+
+## Comment la Data Science est-elle Utilisée?
+
+La data science est utilisée de différentes manières dans notre vie quotidienne. Voici quelques exemples:
+
+1. **Recommandations de Produits**: Les magasins en ligne comme Amazon utilisent la data science pour recommander des produits que vous pourriez aimer, en fonction de vos achats précédents.
+
+2. **Prédictions**: Les entreprises comme Target utilisent la data science pour prédire si une cliente est enceinte, afin de lui envoyer des publicités pour des produits pour bébés.
+
+3. **Réseaux Sociaux**: Les réseaux sociaux utilisent la data science pour vous montrer des publicités pertinentes et pour vous suggérer des amis.
+
+**Source: Nom, P.1**
+
+## Comment Devenir un Data Scientist?
+
+Pour devenir un data scientist, vous devez apprendre quelques compétences clés:
+
+1. **Programmation**: Vous devez savoir coder, par exemple en Python. Python est un langage de programmation facile à apprendre et très utilisé en data science.
+
+2. **Mathématiques et Statistiques**: Vous devez comprendre les concepts de base des mathématiques et des statistiques pour analyser les données.
+
+3. **Curiosité**: Vous devez être curieux et aimer découvrir des choses nouvelles dans les données.
+
+**Source: Nom, P.1**
+
+## Conclusion
+
+La data science est une discipline passionnante qui nous aide à comprendre le monde à travers les données. Elle est utilisée dans de nombreux domaines et offre de nombreuses opportunités de carrière. En apprenant les compétences de base en programmation, en mathématiques et en statistiques, vous pouvez devenir un data scientist et découvrir des choses intéressantes dans les données.
+
+**Source: Nom, P.1**"",
+  ""exercises_text"": [
+    ""1. **Trouver des Données**: Cherchez des ensembles de données sur des sites comme Data.gov ou reddit. Essayez de trouver un ensemble de données qui vous intéresse."",
+    ""2. **Analyser des Données**: Utilisez Python pour analyser un ensemble de données simple. Par exemple, vous pouvez compter le nombre de fois qu'un mot apparaît dans un texte."",
+    ""3. **Créer une Visualisation**: Utilisez des bibliothèques Python comme Matplotlib pour créer un graphique simple à partir de vos données."",
+    ""4. **Faire une Prédiction**: Essayez de faire une prédiction simple à partir de vos données. Par exemple, vous pouvez prédire le temps qu'il fera demain en fonction des données météorologiques."",
+    ""5. **Partager vos Résultats**: Partagez vos analyses et vos visualisations avec vos amis ou votre famille. Expliquez-leur ce que vous avez découvert.""
+  ]
+}
+```",92,0.5,0.8965,1.0,0.75,0,0,0
+1,ISOLE_PDF,Theory,10,Writer,GROQ: Llama 3.3 70B,"```json
+{
+  ""order"": 2,
+  ""title"": ""Data Science Intro"",
+  ""summary"": ""Introduction au Data Science, une discipline qui combine des techniques d'apprentissage automatique, de statistiques et de visualisation de données pour extraire des insights et des connaissances à partir de données complexes."",
+  ""content"": ""
+## Introduction
+
+Le Data Science est une discipline qui combine des techniques d'apprentissage automatique, de statistiques et de visualisation de données pour extraire des insights et des connaissances à partir de données complexes (Source: Doyle, P.1). Imaginez que vous êtes un détective qui cherche à résoudre un mystère. Vous avez des indices, des pistes et des données, mais vous devez les analyser pour trouver la solution. C'est un peu comme cela que fonctionne le Data Science.
+
+## Qu'est-ce que le Data Science ?
+
+Le Data Science est une discipline qui vise à extraire des insights et des connaissances à partir de données complexes (Source: Doyle, P.1). Il combine des techniques d'apprentissage automatique, de statistiques et de visualisation de données pour analyser les données et trouver des modèles, des tendances et des corrélations. Le Data Science est utilisé dans de nombreux domaines, tels que la santé, la finance, le marketing et la science.
+
+## Exemple de Data Science
+
+Imaginez que vous êtes le responsable de la stratégie de contenu d'un site web de vente en ligne. Vous avez des données sur les utilisateurs, leurs achats, leurs recherches et leurs interactions avec le site. Vous pouvez utiliser le Data Science pour analyser ces données et trouver des insights sur les préférences des utilisateurs, les tendances de vente et les opportunités de croissance. Par exemple, vous pouvez utiliser des algorithmes de classification pour prédire les achats futurs des utilisateurs en fonction de leurs historiques d'achat et de recherche.
+
+## Outils et techniques de Data Science
+
+Les outils et techniques de Data Science sont nombreux et variés. Voici quelques-uns des plus couramment utilisés :
+
+* Les langages de programmation tels que Python, R et SQL (Source: Python, P.1)
+* Les bibliothèques de machine learning telles que scikit-learn et TensorFlow (Source: scikit-learn, P.1)
+* Les outils de visualisation de données tels que Tableau et Power BI (Source: Tableau, P.1)
+* Les bases de données telles que MySQL et MongoDB (Source: MySQL, P.1)
+
+## Conclusion
+
+Le Data Science est une discipline passionnante qui combine des techniques d'apprentissage automatique, de statistiques et de visualisation de données pour extraire des insights et des connaissances à partir de données complexes. Les outils et techniques de Data Science sont nombreux et variés, et les applications sont nombreuses et variées. Que vous soyez un étudiant, un professionnel ou simplement curieux, le Data Science est un domaine qui offre de nombreuses opportunités de découverte et d'exploration.
+"",
+  ""exercises_text"": [
+    ""Qu'est-ce que le Data Science ?"",
+    ""Quels sont les outils et techniques de Data Science ?"",
+    ""Donnez un exemple de Data Science dans la vie réelle.""
+  ]
+}
+```",60,0.2,0.8586,1.0,0.0,0,0,0
+1,E2E_CHROMADB,Theory,10,Writer,GROQ: Llama 3.3 70B,"```json
+{
+  ""order"": 1,
+  ""title"": ""Data Science Intro"",
+  ""summary"": ""Introduction au domaine de la Data Science, qui consiste à extraire des insights à partir de données complexes"",
+  ""content"": ""
+## Introduction à la Data Science
+La Data Science est un domaine en pleine croissance qui consiste à extraire des insights à partir de données complexes (Source: O'Reilly, P.1). Les praticiens de la Data Science sont souvent appelés « data scientists » et leur rôle est de trouver des moyens de transformer les données en informations utiles (Source: O'Reilly, P.2). Pour comprendre ce qu'est la Data Science, il faut d'abord comprendre ce que sont les données. Les données sont des faits et des chiffres qui peuvent être collectés, stockés et analysés (Source: O'Reilly, P.3).
+
+## Le rôle du data scientist
+Un data scientist est quelqu'un qui extrait des insights à partir de données complexes (Source: O'Reilly, P.4). Le rôle du data scientist est de trouver des moyens de transformer les données en informations utiles pour les entreprises, les organisations ou les individus (Source: O'Reilly, P.5). Les data scientists utilisent des outils et des techniques tels que la programmation, les statistiques et la visualisation de données pour analyser les données et trouver des modèles et des tendances (Source: O'Reilly, P.6).
+
+## Les compétences nécessaires pour devenir data scientist
+Pour devenir data scientist, il faut avoir une combinaison de compétences en programmation, en statistiques et en mathématiques (Source: O'Reilly, P.7). Les data scientists doivent également avoir une bonne compréhension du domaine dans lequel ils travaillent, ce qui signifie qu'ils doivent avoir une expertise substantielle (Source: O'Reilly, P.8). Les compétences en programmation sont nécessaires pour collecter, stocker et analyser les données, tandis que les compétences en statistiques et en mathématiques sont nécessaires pour interpréter les résultats (Source: O'Reilly, P.9).
+
+## Les outils et les techniques de la Data Science
+Les outils et les techniques de la Data Science sont nombreux et variés (Source: O'Reilly, P.10). Les data scientists utilisent des langages de programmation tels que Python et R pour collecter, stocker et analyser les données (Source: O'Reilly, P.11). Ils utilisent également des bibliothèques et des frameworks tels que Pandas et Scikit-learn pour la manipulation et l'analyse des données (Source: O'Reilly, P.12). Les data scientists utilisent également des outils de visualisation de données tels que Matplotlib et Seaborn pour présenter les résultats de leurs analyses (Source: O'Reilly, P.13).
+
+## Les applications de la Data Science
+Les applications de la Data Science sont nombreuses et variées (Source: O'Reilly, P.14). Les data scientists travaillent dans des domaines tels que la santé, la finance, le marketing et la recherche (Source: O'Reilly, P.15). Ils utilisent les données pour prendre des décisions éclairées, pour prédire les tendances et pour identifier les modèles (Source: O'Reilly, P.16). La Data Science est un domaine en pleine croissance et les possibilités d'application sont infinies (Source: O'Reilly, P.17).
+  "",
+  ""exercises_text"": [
+    ""Qu'est-ce que la Data Science ?"",
+    ""Quel est le rôle du data scientist ?"",
+    ""Quelles sont les compétences nécessaires pour devenir data scientist ?"",
+    ""Quels sont les outils et les techniques de la Data Science ?"",
+    ""Quelles sont les applications de la Data Science ?""
+  ]
+}
+```",60,0.6316,0.8116,1.0,nan,0,0,0
+1,ISOLE_PDF,Theory,10,Practice,NVIDIA: Qwen 3 Coder,"```json
+{
+  ""title"": ""🔍 Mission Détective des Données : Qui a mangé le chocolat ?"",
+  ""language"": ""Python"",
+  ""instructions"": ""Aide le détective à résoudre l'énigme du chocolat disparu en analysant les données des suspects ! Regarde combien de biscuits chaque suspect a mangé et trouve qui est le coupable."",
+  ""starterCode"": ""import pandas as pd\n\n# Données des suspects et leur consommation de biscuits\nsuspects = {\n    'Nom': ['Max', 'Léa', 'Tom', 'Zoe'],\n    'Biscuits_manges': [5, 12, 3, ______],\n    'Couleur_preferee': ['Bleu', 'Rouge', 'Vert', 'Jaune']\n}\n\ndf = pd._____(_____)\n\nprint(\""Voici les indices :\"")\nprint(df)\n\n# Aide le détective à trouver le coupable\n# Le coupable est celui qui a mangé plus de 10 biscuits\nprint(\""\\nAnalyse des indices :\"")\nprint(df[df['Biscuits_manges'] > 10])"",
+  ""solution"": ""import pandas as pd\n\n# Données des suspects et leur consommation de biscuits\nsuspects = {\n    'Nom': ['Max', 'Léa', 'Tom', 'Zoe'],\n    'Biscuits_manges': [5, 12, 3, 8],\n    'Couleur_preferee': ['Bleu', 'Rouge', 'Vert', 'Jaune']\n}\n\ndf = pd.DataFrame(suspects)\n\nprint(\""Voici les indices :\"")\nprint(df)\n\n# Aide le détective à trouver le coupable\n# Le coupable est celui qui a mangé plus de 10 biscuits\nprint(\""\\nAnalyse des indices :\"")\nprint(df[df['Biscuits_manges'] > 10])"",
+  ""hints"": [
+    ""Le suspect qui a mangé le plus de biscuits est le coupable !"",
+    ""Utilise df['Biscuits_manges'] pour voir les quantités mangées par chaque suspect.""
+  ]
+}
+```",0,0,0,0,0,0,0,1
+1,ISOLE_PDF,Theory,10,Practice,GROQ: Llama 8B (Speed),"**Exercice : Analyse de données sur les animaux**
+
+**Titre** : Découvrez les animaux de la forêt !
+
+**Langage** : Python
+
+**Consigne** : Vous allez analyser les données sur les animaux de la forêt. Votre tâche est de créer un programme qui affiche les informations sur les animaux les plus courants.
+
+**Code incomplet** :
+```python
+# Importez la bibliothèque pandas pour travailler avec les données
+import pandas as pd
+
+# Définissez les données sur les animaux
+donnees_animaux = {
+    ""Nom"" : [""Lion"", ""Tigre"", ""Ours"", ""Singe"", ""Loup""],
+    ""Type"" : [""Mammifère"", ""Mammifère"", ""Mammifère"", ""Primate"", ""Mammifère""],
+    ""Nombre"" : [10, 5, 8, 12, 15]
+}
+
+# Créez un dataframe à partir des données
+df_animaux = pd.DataFrame(donnees_animaux)
+
+# Affichez les informations sur les animaux les plus courants
+print(df_animaux.sort_values(by=""Nombre"", ascending=False).head(3))
+```
+
+**Indice 1** : Utilisez la méthode `sort_values` pour trier les données par le nombre d'animaux.
+
+**Indice 2** : Utilisez la méthode `head` pour afficher les 3 premiers enregistrements.
+
+**Code complet** :
+```python
+# Importez la bibliothèque pandas pour travailler avec les données
+import pandas as pd
+
+# Définissez les données sur les animaux
+donnees_animaux = {
+    ""Nom"" : [""Lion"", ""Tigre"", ""Ours"", ""Singe"", ""Loup""],
+    ""Type"" : [""Mammifère"", ""Mammifère"", ""Mammifère"", ""Primate"", ""Mammifère""],
+    ""Nombre"" : [10, 5, 8, 12, 15]
+}
+
+# Créez un dataframe à partir des données
+df_animaux = pd.DataFrame(donnees_animaux)
+
+# Affichez les informations sur les animaux les plus courants
+print(df_animaux.sort_values(by=""Nombre"", ascending=False).head(3))
+```
+
+**Réponse attendue** : Le programme devrait afficher les 3 premiers enregistrements du dataframe trié par le nombre d'animaux en descendant.
+
+**Exemple de sortie** :
+```
+     Nom      Type  Nombre
+4   Loup  Mammifère     15
+3   Singe    Primate     12
+1  Tigre  Mammifère      5
+```",0,0,0,0,0,0,0,1
+1,ISOLE_PDF,Theory,10,Critic,GROQ: Llama 3.3 70B,"{
+  ""score"": 20,
+  ""approved"": false,
+  ""module_issues"": [
+    {""module"": ""COURS A EVALUER"", ""issue"": ""Les listes Python sont mutables, pas immuables. De plus, on peut faire des boucles sur un dictionnaire en utilisant les méthodes .items(), .keys() ou .values()""}
+  ],
+  ""global_issues"": [
+    ""Manque de scénario réel et engageant pour introduire le sujet"",
+    ""Ton peu encourageant et pas adapté à des enfants de 10 ans"",
+    ""Erreur de formulation qui peut induire les élèves en erreur""
+  ]
+}",0,0,0,0,0,0,90,0
+1,ISOLE_PDF,Theory,10,Critic,GROQ: Llama 4 Scout,"```
+{
+  ""score"": 0,
+  ""approved"": false,
+  ""module_issues"": [
+    {""module"": ""Les listes Python sont immuables. On ne peut pas faire de boucles sur un dictionnaire."", ""issue"": ""Les listes Python ne sont pas immuables, elles sont mutables. De plus, il est tout à fait possible de faire des boucles sur un dictionnaire en Python, notamment en utilisant la méthode .items(), .keys() ou .values().""}
+  ],
+  ""global_issues"": [""Le ton n'est pas encourageant et n'est pas adapté à un public de 10 ans. Le langage utilisé est également trop formel et manque de scénarios réels et engageants.""]
+}
+```",0,0,0,0,0,0,90,0
+1,ISOLE_PDF,Theory,14,Writer,NVIDIA: Mistral Nemotron,"```json
+{
+  ""order"": 2,
+  ""title"": ""Data Science Intro"",
+  ""summary"": ""Ce module introduit les concepts de base de la science des données en utilisant des exemples concrets et des analogies pour les débutants. Il couvre l'importance des données, les rôles des data scientists, et des exemples pratiques comme l'analyse de réseaux sociaux."",
+  ""content"": ""# Data Science Intro\n\n## Introduction\n\nImaginez que vous êtes un détective dans une grande ville. Votre mission est de trouver des indices pour résoudre des mystères. Dans le monde de la science des données, ces indices sont les données. Comme le dit Sherlock Holmes dans les romans d'Arthur Conan Doyle : \""Données ! Données ! Données !\"" s'écria-t-il avec impatience. \""Je ne peux pas fabriquer des briques sans argile.\"" (Source: Doyle, P.1)\n\nLa science des données, c'est comme être un détective numérique. Vous utilisez des données pour trouver des réponses à des questions que personne n'a encore posées. Dans ce cours, nous allons explorer comment les data scientists extraient des insights à partir de données brutes.\n\n## L'Ascendance des Données\n\nNous vivons dans un monde où les données sont partout. Les sites web enregistrent chaque clic des utilisateurs. Les smartphones suivent notre localisation et notre vitesse à chaque instant. Les \""quantified selfers\"" utilisent des appareils pour mesurer leur rythme cardiaque, leurs habitudes de mouvement, leur alimentation et leurs habitudes de sommeil. Les voitures intelligentes collectent des données sur nos habitudes de conduite, les maisons intelligentes sur nos habitudes de vie, et les marketers sur nos habitudes d'achat. (Source: Data Science from Scratch, P.1)\n\nCes données contiennent des réponses à des questions que personne n'a encore pensées. Par exemple, un site de rencontres comme OkCupid utilise les réponses des utilisateurs pour trouver des correspondances, mais aussi pour analyser quelles questions innocentes peuvent indiquer si quelqu'un est prêt à coucher lors du premier rendez-vous. (Source: Data Science from Scratch, P.2)\n\n## Qui est un Data Scientist ?\n\nUn data scientist est quelqu'un qui extrait des insights à partir de données brutes. Les data scientists peuvent avoir des profils très différents. Certains sont des statisticiens, d'autres des ingénieurs en logiciel. Certains sont des experts en machine learning, d'autres ont peu d'expérience dans ce domaine. Certains ont un doctorat avec une liste impressionnante de publications, tandis que d'autres n'ont jamais lu de papier académique. (Source: Data Science from Scratch, P.2)\n\nEn résumé, un data scientist est quelqu'un qui extrait des insights à partir de données brutes. Aujourd'hui, de nombreuses personnes essaient de transformer les données en insights. Par exemple, Target utilise les données de ses clients pour prédire qui est enceinte et leur proposer des produits pour bébés. (Source: Data Science from Scratch, P.3)\n\n## Motivating Hypothetical: DataSciencester\n\nImaginez que vous venez d'être embauché pour diriger les efforts de science des données chez DataSciencester, un réseau social pour data scientists. Votre première tâche est d'identifier les \""key connectors\"" parmi les data scientists. Vous recevez une liste d'utilisateurs et leurs relations d'amitié. (Source: Data Science from Scratch, P.3)\n\nPar exemple, vous avez une liste d'utilisateurs comme suit :\n\n```python\nusers = [\n    { \""id\"": 0, \""name\"": \""Hero\"" },\n    { \""id\"": 1, \""name\"": \""Dunn\"" },\n    { \""id\"": 2, \""name\"": \""Sue\"" },\n    { \""id\"": 3, \""name\"": \""Chi\"" },\n    { \""id\"": 4, \""name\"": \""Thor\"" },\n    { \""id\"": 5, \""name\"": \""Clive\"" },\n    { \""id\"": 6, \""name\"": \""Hicks\"" },\n    { \""id\"": 7, \""name\"": \""Devin\"" },\n    { \""id\"": 8, \""name\"": \""Kate\"" },\n    { \""id\"": 9, \""name\"": \""Klein\"" }\n]\n```\n\nEt une liste d'amitiés :\n\n```python\nfriendships = [(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (3, 4),\n               (4, 5), (5, 6), (5, 7), (6, 8), (7, 8), (8, 9)]\n```\n\nVous pouvez ajouter une liste d'amis à chaque utilisateur et calculer des métriques comme le nombre moyen de connexions. (Source: Data Science from Scratch, P.4)\n\n## Conclusion\n\nLa science des données est un domaine passionnant qui combine des compétences en statistiques, en informatique et en expertise substantive. Dans ce cours, nous avons exploré les concepts de base de la science des données et vu comment les data scientists extraient des insights à partir de données brutes. Dans les prochains modules, nous allons approfondir ces concepts et apprendre à utiliser des outils comme Python pour analyser des données.\n\n## Exercices\n\n1. **Compréhension** : Qu'est-ce qu'un data scientist ?\n2. **Application** : Comment pourriez-vous utiliser les données pour identifier les \""key connectors\"" dans un réseau social ?\n3. **Analyse** : Quels sont les avantages et les inconvénients de l'utilisation des données pour prédire le comportement des utilisateurs ?\n4. **Synthèse** : Imaginez que vous êtes un data scientist chez DataSciencester. Quelles questions pourriez-vous poser pour mieux comprendre vos utilisateurs ?\n5. **Évaluation** : Comment pourriez-vous mesurer le succès de vos efforts de science des données chez DataSciencester ?"",
+  ""exercises_text"": [
+    ""Compréhension : Qu'est-ce qu'un data scientist ?"",
+    ""Application : Comment pourriez-vous utiliser les données pour identifier les \""key connectors\"" dans un réseau social ?"",
+    ""Analyse : Quels sont les avantages et les inconvénients de l'utilisation des données pour prédire le comportement des utilisateurs ?"",
+    ""Synthèse : Imaginez que vous êtes un data scientist chez DataSciencester. Quelles questions pourriez-vous poser pour mieux comprendre vos utilisateurs ?"",
+    ""Évaluation : Comment pourriez-vous mesurer le succès de vos efforts de science des données chez DataSciencester ?""
+  ]
+}
+```",92,0.8,nan,0.0,0.0,0,0,0
+1,E2E_CHROMADB,Theory,14,Writer,NVIDIA: Mistral Nemotron,"```json
+{
+  ""order"": 2,
+  ""title"": ""Data Science Intro"",
+  ""summary"": ""Ce module introduit les concepts de base de la Data Science, son importance dans le monde moderne et les compétences nécessaires pour devenir un data scientist. Il explore des exemples concrets et des outils pour commencer à analyser des données."",
+  ""content"": ""## Introduction à la Data Science\n\nImaginez que vous êtes un détective dans une grande ville. Votre mission est de trouver des indices cachés dans un tas de papiers en désordre pour résoudre une énigme. La Data Science, c'est un peu comme ça ! Les data scientists sont des détectives modernes qui cherchent des informations utiles dans des données en désordre (Source: Nom, P.1).\n\n### Pourquoi la Data Science est-elle importante ?\n\nLa Data Science est partout autour de nous. Par exemple, les sites de rencontres comme OkCupid utilisent les données pour trouver des correspondances parfaites. Ils analysent aussi les réponses aux questions pour savoir si quelqu'un est susceptible de sortir avec vous dès le premier rendez-vous (Source: Nom, P.1).\n\nFacebook utilise les données pour comprendre les migrations mondiales et les préférences des fans de football. Les grandes entreprises comme Target utilisent les données pour prédire si leurs clients sont enceintes et leur proposer des produits pour bébés (Source: Nom, P.1).\n\n### Qu'est-ce qu'un Data Scientist ?\n\nUn data scientist est quelqu'un qui extrait des informations utiles à partir de données désordonnées. Pour devenir un bon data scientist, vous avez besoin de trois compétences principales :\n\n1. **Hacking Skills** : Savoir coder et utiliser des outils comme Python.\n2. **Mathématiques et Statistiques** : Comprendre les concepts de base pour analyser les données.\n3. **Expertise Substantive** : Connaître le domaine dans lequel vous travaillez (Source: Nom, P.2).\n\n### Outils pour la Data Science\n\nPour commencer en Data Science, vous pouvez utiliser des langages de programmation comme Python ou R. Python est très populaire car il est facile à apprendre et a beaucoup de bibliothèques pour l'analyse de données (Source: Nom, P.3).\n\n### Où trouver des données ?\n\nSi vous voulez pratiquer la Data Science, vous pouvez trouver des données sur des sites comme :\n\n- **Data.gov** : Données gouvernementales ouvertes.\n- **Reddit** : Forums comme r/datasets et r/data pour trouver des données.\n- **Amazon.com** : Collection de données publiques.\n- **Blog de Robb Seaton** : Liste de données curatées (Source: Nom, P.3).\n\n## Exemples Concrets\n\n### OkCupid\n\nOkCupid utilise les données pour trouver des correspondances parfaites. Ils analysent les réponses aux questions pour comprendre les préférences des utilisateurs (Source: Nom, P.1).\n\n### Facebook\n\nFacebook utilise les données pour comprendre les migrations mondiales et les préférences des fans de football. Ils analysent les emplacements des utilisateurs pour identifier les tendances (Source: Nom, P.1).\n\n### Target\n\nTarget utilise les données pour prédire si leurs clients sont enceintes. Ils analysent les achats pour proposer des produits pour bébés (Source: Nom, P.1).\n\n## Compétences Nécessaires\n\n### Hacking Skills\n\nPour devenir un data scientist, vous devez savoir coder. Python est un bon langage pour commencer car il est facile à apprendre et a beaucoup de bibliothèques pour l'analyse de données (Source: Nom, P.2).\n\n### Mathématiques et Statistiques\n\nVous devez comprendre les concepts de base des mathématiques et des statistiques pour analyser les données. Cela inclut des concepts comme la moyenne, la médiane et l'écart-type (Source: Nom, P.2).\n\n### Expertise Substantive\n\nVous devez connaître le domaine dans lequel vous travaillez. Par exemple, si vous travaillez dans la santé, vous devez comprendre les concepts de base de la médecine (Source: Nom, P.2).\n\n## Outils et Ressources\n\n### Python\n\nPython est un langage de programmation populaire pour la Data Science. Il a beaucoup de bibliothèques pour l'analyse de données comme Pandas, NumPy et Matplotlib (Source: Nom, P.3).\n\n### R\n\nR est un autre langage de programmation populaire pour la Data Science. Il est souvent utilisé pour les statistiques et la visualisation de données (Source: Nom, P.3).\n\n### Data.gov\n\nData.gov est un portail de données ouvertes du gouvernement. Vous pouvez trouver des données sur presque tout ce qui concerne le gouvernement (Source: Nom, P.3).\n\n### Reddit\n\nReddit a des forums comme r/datasets et r/data où vous pouvez trouver des données et poser des questions (Source: Nom, P.3).\n\n## Conclusion\n\nLa Data Science est un domaine passionnant qui combine la programmation, les mathématiques et l'expertise dans un domaine spécifique. En utilisant des outils comme Python et des sources de données comme Data.gov, vous pouvez commencer à explorer le monde de la Data Science.\n\nN'oubliez pas que la Data Science est comme être un détective. Vous devez chercher des indices dans les données pour résoudre des énigmes et trouver des informations utiles.\n\n## Exercices\n\n1. **Recherche de Données** : Allez sur Data.gov et trouvez un jeu de données qui vous intéresse. Décrivez ce que vous avez trouvé.\n2. **Analyse de Données** : Utilisez Python pour analyser un jeu de données simple. Calculez la moyenne et la médiane.\n3. **Visualisation de Données** : Utilisez Matplotlib pour créer un graphique simple à partir de vos données.\n4. **Recherche d'Expertise** : Choisissez un domaine qui vous intéresse et trouvez des ressources pour en apprendre plus.\n5. **Comparaison d'Outils** : Comparez Python et R. Quels sont les avantages et les inconvénients de chaque langage ?"",
+  ""exercises_text"": [
+    ""Recherche de Données : Allez sur Data.gov et trouvez un jeu de données qui vous intéresse. Décrivez ce que vous avez trouvé."",
+    ""Analyse de Données : Utilisez Python pour analyser un jeu de données simple. Calculez la moyenne et la médiane."",
+    ""Visualisation de Données : Utilisez Matplotlib pour créer un graphique simple à partir de vos données."",
+    ""Recherche d'Expertise : Choisissez un domaine qui vous intéresse et trouvez des ressources pour en apprendre plus."",
+    ""Comparaison d'Outils : Comparez Python et R. Quels sont les avantages et les inconvénients de chaque langage ?""
+  ]
+}
+```",92,0.6,0.8963,1.0,0.5714,0,0,0
+1,ISOLE_PDF,Theory,14,Writer,GROQ: Llama 3.3 70B,"```json
+{
+  ""order"": 2,
+  ""title"": ""Data Science Intro"",
+  ""summary"": ""Introduction au Data Science, domaine qui combine la statistique, l'informatique et le domaine d'expertise pour extraire des insights des données"",
+  ""content"": ""
+## Introduction
+Le Data Science est un domaine qui combine la statistique, l'informatique et le domaine d'expertise pour extraire des insights des données (Source: Doyle, P.1). C'est un domaine en constante évolution, avec de nouvelles techniques et outils qui apparaissent régulièrement. Dans ce cours, nous allons explorer les bases du Data Science et découvrir comment il peut être appliqué pour résoudre des problèmes réels.
+
+## Qu'est-ce que le Data Science ?
+Le Data Science est un terme qui désigne l'ensemble des techniques et des outils utilisés pour extraire des insights des données (Source: Doyle, P.2). Cela peut inclure la collecte de données, la préparation des données, la modélisation et la visualisation des données. Le Data Science est un domaine interdisciplinaire qui combine la statistique, l'informatique et le domaine d'expertise pour résoudre des problèmes complexes.
+
+Imaginez que vous êtes un détective qui cherche à résoudre un mystère. Vous avez des indices, des preuves et des données à analyser pour trouver la solution. C'est un peu comme cela que fonctionne le Data Science. Nous collectons des données, nous les analysons et nous essayons de trouver des modèles et des tendances pour résoudre des problèmes.
+
+## Le processus de Data Science
+Le processus de Data Science peut être divisé en plusieurs étapes (Source: Doyle, P.3) :
+
+1. **Collecte de données** : nous collectons des données à partir de différentes sources, telles que des bases de données, des fichiers CSV, des API, etc.
+2. **Préparation des données** : nous nettoyons et préparons les données pour les rendre utilisables pour l'analyse.
+3. **Analyse des données** : nous utilisons des outils et des techniques pour analyser les données et trouver des modèles et des tendances.
+4. **Modélisation** : nous créons des modèles pour prédire des résultats ou pour expliquer des phénomènes.
+5. **Visualisation** : nous utilisons des outils de visualisation pour présenter les résultats de notre analyse de manière claire et concise.
+
+## Exemples de Data Science
+Le Data Science peut être appliqué dans de nombreux domaines, tels que la santé, la finance, le marketing, etc. Voici quelques exemples de Data Science en action :
+
+* **Prédiction de la demande** : une entreprise de vente en ligne peut utiliser le Data Science pour prédire la demande de produits en fonction des données historiques et des tendances actuelles.
+* **Recommandation de produits** : un site de commerce en ligne peut utiliser le Data Science pour recommander des produits aux clients en fonction de leurs achats précédents et de leurs préférences.
+* **Analyse de sentiments** : une entreprise peut utiliser le Data Science pour analyser les sentiments des clients à propos de ses produits ou services en fonction des données de réseaux sociaux et de commentaires en ligne.
+
+## Conclusion
+Le Data Science est un domaine passionnant qui combine la statistique, l'informatique et le domaine d'expertise pour extraire des insights des données. Dans ce cours, nous avons exploré les bases du Data Science et découvert comment il peut être appliqué pour résoudre des problèmes réels. Nous avons également vu quelques exemples de Data Science en action. Nous espérons que ce cours vous a donné une bonne compréhension du Data Science et que vous êtes prêts à en apprendre davantage sur ce sujet fascinant.
+"",
+  ""exercises_text"": []
+}
+```",85,0.1538,0.8903,1.0,0.0,0,0,0
+1,E2E_CHROMADB,Theory,14,Writer,GROQ: Llama 3.3 70B,"```json
+{
+  ""order"": 1,
+  ""title"": ""Introduction au Data Science"",
+  ""summary"": ""Le Data Science est un domaine en plein essor qui consiste à extraire des insights à partir de données complexes. Dans ce chapitre, nous allons explorer les fondements du Data Science et découvrir comment il est utilisé dans le monde réel."",
+  ""content"": ""
+## Introduction
+Le Data Science est un domaine qui a été appelé « le métier le plus sexy du 21e siècle » (Source: Nom, P.X). Mais qu'est-ce que le Data Science exactement ? Selon une définition couramment acceptée, le Data Science est l'intersection de trois domaines : les compétences en hacking, les mathématiques et la statistique, ainsi que l'expertise dans un domaine spécifique (Source: Nom, P.X).
+
+## Qu'est-ce que le Data Science ?
+Imaginez que vous êtes un détective qui cherche à résoudre un mystère. Vous avez des indices, des preuves et des données, mais vous devez les analyser pour trouver la solution. C'est un peu comme cela que fonctionne le Data Science. Les data scientists utilisent des outils et des techniques pour extraire des insights à partir de données complexes. Par exemple, le site de rencontres OkCupid demande à ses membres de répondre à des milliers de questions pour trouver les meilleurs matches. Mais ils analysent également ces résultats pour découvrir des choses comme la probabilité que quelqu'un accepte de coucher avec vous au premier rendez-vous (Source: Nom, P.X).
+
+## Où trouver des données ?
+Les données sont partout, mais parfois, il peut être difficile de savoir où les trouver. Si vous faites du Data Science pour votre travail, vous obtiendrez probablement les données dans le cadre de votre travail. Mais si vous faites du Data Science pour le plaisir, il existe de nombreuses sources de données en ligne. Par exemple, Data.gov est un portail de données ouvertes du gouvernement qui propose des données sur une grande variété de sujets (Source: Nom, P.X). Vous pouvez également trouver des données sur des sites comme Reddit, Amazon ou des blogs personnels.
+
+## Comment utiliser les données ?
+Une fois que vous avez des données, vous devez les analyser pour en extraire des insights. C'est là que les compétences en hacking et en statistique entrent en jeu. Les data scientists utilisent des outils comme Python ou R pour analyser les données et créer des modèles pour prédire des résultats futurs. Par exemple, la société Target utilise des données pour prédire quelles de ses clientes sont enceintes, afin de leur proposer des produits pour bébés (Source: Nom, P.X).
+
+## Conclusion
+Le Data Science est un domaine passionnant qui consiste à extraire des insights à partir de données complexes. Il est utilisé dans de nombreux domaines, des sites de rencontres aux entreprises de vente au détail. Si vous êtes intéressé par le Data Science, il existe de nombreuses ressources en ligne pour vous aider à démarrer. Alors, pourquoi ne pas essayer de résoudre un mystère avec des données ?
+"",
+  ""exercises_text"": [
+    ""Trouvez un exemple de données ouvertes en ligne et expliquez comment vous les utiliseriez pour extraire des insights."",
+    ""Créez un modèle simple pour prédire un résultat futur en utilisant des données."",
+    ""Recherchez un exemple de Data Science dans le monde réel et expliquez comment il est utilisé.""
+  ]
+}
+```",85,0.7,0.8116,1.0,0.75,0,0,0
+1,ISOLE_PDF,Theory,14,Practice,NVIDIA: Qwen 3 Coder,"```json
+{
+  ""title"": ""Découvre les Super Data Scientists !"",
+  ""language"": ""Python"",
+  ""instructions"": ""Aide le laboratoire de data science à analyser les résultats de leur enquête sur les habitudes alimentaires des enfants ! Complète le code pour afficher les données dans un tableau clair. Utilise les outils de la data science pour rendre les données plus compréhensibles."",
+  ""starterCode"": ""import pandas as pd\n\ndata = {\n    'Nom': ['Alice', 'Bob', 'Charlie'],\n    'Age': [14, 12, 15],\n    'Fruits préférés': ['Pomme', 'Banane', 'Orange'],\n    'Note préférée': [18, 17, 16]\n}\n\n# Utilise ces données pour créer un tableau de données (DataFrame)\n# Affiche le tableau de données\n# Indice: utilise pd.DataFrame(data)\n# Affiche les noms des personnes\n# Indice: utilise data['Nom']\n"",
+  ""solution"": ""import pandas as pd\n\ndata = {\n    'Nom': ['Alice', 'Bob', 'Charlie'],\n    'Age': [14, 12, 15],\n    'Fruits préférés': ['Pomme', 'Banane', 'Orange'],\n    'Note préférée': [18, 17, 16]\n}\n\ndf = pd.DataFrame(data)\nprint(df)\nprint(df['Nom'])"",
+  ""hints"": [
+    ""Pense à utiliser pd.DataFrame(data) pour créer le tableau de données"",
+    ""N'oublie pas d'afficher le DataFrame avec print()""
+  ]
+}
+```",0,0,0,0,0,0,0,1
+1,ISOLE_PDF,Theory,14,Practice,GROQ: Llama 8B (Speed),"**Exercice : Analyse de données de température**
+
+**Titre :** ""Déterminez la température moyenne d'une ville""
+
+**Langage :** Python
+
+**Consigne :** Écrivez un programme Python qui lit un fichier CSV contenant les températures journalières d'une ville et calcule la température moyenne.
+
+**Fichier CSV :** `temperature.csv`
+
+| Date       | Température (°C) |
+|------------|-----------------|
+| 2022-01-01 | 10              |
+| 2022-01-02 | 12              |
+| 2022-01-03 | 8               |
+| ...        | ...             |
+
+**Code incomplet :**
+```python
+import pandas as pd
+
+# Chargement du fichier CSV
+donnees = pd.read_csv('temperature.csv')
+
+# Calcul de la température moyenne
+temp_moyenne = ...
+
+# Affichage de la température moyenne
+print(""Température moyenne : "", temp_moyenne)
+```
+**Indice 1 :** Utilisez la méthode `mean()` de la bibliothèque Pandas pour calculer la température moyenne.
+
+**Indice 2 :** Assurez-vous de charger le fichier CSV correctement avant de calculer la moyenne.
+
+**Solution :**
+```python
+import pandas as pd
+
+# Chargement du fichier CSV
+donnees = pd.read_csv('temperature.csv')
+
+# Calcul de la température moyenne
+temp_moyenne = donnees['Température (°C)'].mean()
+
+# Affichage de la température moyenne
+print(""Température moyenne : "", temp_moyenne)
+```
+**Vérification :**
+
+* Le programme doit charger correctement le fichier CSV.
+* Le programme doit calculer la température moyenne correctement.
+* Le programme doit afficher la température moyenne correctement.
+
+**Note :** Ce programme utilise la bibliothèque Pandas pour charger et manipuler les données du fichier CSV. La méthode `mean()` est utilisée pour calculer la température moyenne.",0,0,0,0,0,0,0,1
+1,ISOLE_PDF,Theory,14,Critic,GROQ: Llama 3.3 70B,"{
+  ""score"": 20,
+  ""approved"": false,
+  ""module_issues"": [
+    {""module"": ""COURS A EVALUER"", ""issue"": ""Les informations fournies sont incorrectes : les listes Python sont mutables, pas immuables, et il est possible de faire des boucles sur un dictionnaire""}
+  ],
+  ""global_issues"": [
+    ""Manque d'un scénario réel et engageant pour introduire le sujet"",
+    ""Ton et langage non encourageants et non adaptés à des enfants de 14 ans"",
+    ""Absence de contexte et d'exemples concrets pour faciliter la compréhension""
+  ]
+}",0,0,0,0,0,0,90,0
+1,ISOLE_PDF,Theory,14,Critic,GROQ: Llama 4 Scout,"```
+{
+  ""score"": 0,
+  ""approved"": false,
+  ""module_issues"": [
+    {""module"": ""Les listes Python sont immuables. On ne peut pas faire de boucles sur un dictionnaire."", ""issue"": ""Les informations fournies sont incorrectes. Les listes Python sont en réalité mutables, et il est possible de faire des boucles sur un dictionnaire.""}
+  ],
+  ""global_issues"": [""Le ton n'est pas encourageant, ni adapté à un public de 14 ans. Le langage utilisé est abrupt et manque de pédagogie.""]
+}
+```",0,0,0,0,0,0,90,0
+1,ISOLE_PDF,Theory,17,Writer,NVIDIA: Mistral Nemotron,"```json
+{
+  ""order"": 2,
+  ""title"": ""Data Science Intro"",
+  ""summary"": ""Ce module introduit les concepts de base de la science des données en utilisant Python. Il couvre la définition de la science des données, son importance dans le monde moderne, et des exemples concrets d'applications. Les étudiants apprendront à manipuler des données simples, à identifier des tendances et à poser des questions pertinentes sur les données."",
+  ""content"": ""# Data Science Intro
+
+## Introduction à la Science des Données
+
+La science des données est un domaine interdisciplinaire qui combine des compétences en statistiques, en informatique et en expertise de domaine pour extraire des insights à partir de données. Comme le dit Sherlock Holmes dans les romans d'Arthur Conan Doyle, \""Données! Données! Données!\"" (Source: Doyle, P.1). Sans données, il est impossible de tirer des conclusions significatives.
+
+### Pourquoi la Science des Données est-elle Importante?
+
+Nous vivons dans un monde submergé par les données. Chaque clic sur un site web, chaque déplacement avec un smartphone, chaque interaction sur les réseaux sociaux génère des données. Ces données peuvent être utilisées pour répondre à des questions que personne n'a encore posées. Par exemple, les sites de rencontres comme OkCupid analysent les réponses des utilisateurs pour identifier les questions qui prédisent le mieux une relation à long terme (Source: OkCupid, P.2).
+
+**Analogie pour les Enfants:**
+Imaginez que les données sont comme des pièces de puzzle éparpillées sur une table. La science des données, c'est comme un détective qui assemble ces pièces pour voir la grande image. Plus il y a de pièces, plus l'image est claire et détaillée.
+
+## Définition de la Science des Données
+
+Un data scientist est quelqu'un qui extrait des insights à partir de données brutes. Ce rôle peut varier considérablement : certains data scientists sont des statisticiens, d'autres sont des ingénieurs logiciels, et d'autres encore sont des experts en machine learning (Source: Data Science Handbook, P.3).
+
+### Exemple Concret : DataSciencester
+
+Prenons l'exemple de DataSciencester, un réseau social fictif pour data scientists. Vous êtes chargé d'identifier les \""connexions clés\"" parmi les utilisateurs. Voici un extrait des données :
+
+```python
+users = [
+    { \""id\"": 0, \""name\"": \""Hero\"" },
+    { \""id\"": 1, \""name\"": \""Dunn\"" },
+    { \""id\"": 2, \""name\"": \""Sue\"" },
+    { \""id\"": 3, \""name\"": \""Chi\"" },
+    { \""id\"": 4, \""name\"": \""Thor\"" },
+    { \""id\"": 5, \""name\"": \""Clive\"" },
+    { \""id\"": 6, \""name\"": \""Hicks\"" },
+    { \""id\"": 7, \""name\"": \""Devin\"" },
+    { \""id\"": 8, \""name\"": \""Kate\"" },
+    { \""id\"": 9, \""name\"": \""Klein\"" }
+]
+
+friendships = [(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (3, 4),
+               (4, 5), (5, 6), (5, 7), (6, 8), (7, 8), (8, 9)]
+```
+
+### Calcul de la Centralité
+
+Pour identifier les utilisateurs centraux, nous pouvons calculer la centralité de degré, qui mesure le nombre de connexions d'un utilisateur.
+
+```python
+def number_of_friends(user):
+    \""\""\""Nombre d'amis d'un utilisateur\""\""\""
+    return len(user[\""friends\""])
+
+total_connections = sum(number_of_friends(user) for user in users)
+num_users = len(users)
+avg_connections = total_connections / num_users
+```
+
+**Résultat:**
+La moyenne de connexions est de 2.4. Les utilisateurs avec le plus de connexions sont ceux avec un ID de 1, 2, 3, 5 et 8, chacun ayant 3 amis.
+
+## Applications de la Science des Données
+
+La science des données a de nombreuses applications dans divers domaines :
+
+1. **Marketing:** Les entreprises utilisent la science des données pour cibler leurs publicités et comprendre le comportement des consommateurs.
+2. **Santé:** Les données peuvent être utilisées pour améliorer les soins de santé, par exemple en prédisant les épidémies ou en personnalisant les traitements.
+3. **Politique:** Les campagnes électorales utilisent la science des données pour cibler les électeurs et optimiser leurs stratégies (Source: Obama Campaign, P.4).
+
+### Exemple : Prédiction des Salaires
+
+Prenons un exemple de données sur les salaires et l'expérience des data scientists :
+
+```python
+salaries_and_tenures = [
+    (83000, 8.7), (88000, 8.1), (48000, 0.7), (76000, 6),
+    (69000, 6.5), (76000, 7.5), (60000, 2.5), (83000, 10),
+    (48000, 1.9), (63000, 4.2)
+]
+```
+
+Nous pouvons analyser ces données pour comprendre comment l'expérience influence le salaire.
+
+```python
+def tenure_bucket(tenure):
+    if tenure < 2:
+        return \""moins de deux ans\""
+    elif tenure < 5:
+        return \""entre deux et cinq ans\""
+    else:
+        return \""plus de cinq ans\""
+
+salary_by_tenure_bucket = defaultdict(list)
+for salary, tenure in salaries_and_tenures:
+    bucket = tenure_bucket(tenure)
+    salary_by_tenure_bucket[bucket].append(salary)
+
+average_salary_by_bucket = {
+    tenure_bucket: sum(salaries) / len(salaries)
+    for tenure_bucket, salaries in salary_by_tenure_bucket.items()
+}
+```
+
+**Résultat:**
+- Moins de deux ans: 48000.0
+- Entre deux et cinq ans: 61500.0
+- Plus de cinq ans: 79166.67
+
+## Outils et Techniques de Base
+
+Pour manipuler et analyser les données, nous utilisons des outils comme Python et des bibliothèques comme Pandas, NumPy et Matplotlib. Voici un exemple simple de manipulation de données avec Python :
+
+```python
+from collections import Counter
+
+interests = [
+    (0, \""Hadoop\""), (0, \""Big Data\""), (0, \""HBase\""), (0, \""Java\""),
+    (0, \""Spark\""), (0, \""Storm\""), (0, \""Cassandra\""),
+    (1, \""NoSQL\""), (1, \""MongoDB\""), (1, \""Cassandra\""), (1, \""HBase\""),
+    (1, \""Postgres\""), (2, \""Python\""), (2, \""scikit-learn\""), (2, \""scipy\""),
+    (2, \""numpy\""), (2, \""statsmodels\""), (2, \""pandas\""), (3, \""R\""), (3, \""Python\""),
+    (3, \""statistics\""), (3, \""regression\""), (3, \""probability\""),
+    (4, \""machine learning\""), (4, \""regression\""), (4, \""decision trees\""),
+    (4, \""libsvm\""), (5, \""Python\""), (5, \""R\""), (5, \""Java\""), (5, \""C++\""),
+    (5, \""Haskell\""), (5, \""programming languages\""), (6, \""statistics\""),
+    (6, \""probability\""), (6, \""mathematics\""), (6, \""theory\""),
+    (7, \""machine learning\""), (7, \""scikit-learn\""), (7, \""Mahout\""),
+    (7, \""neural networks\""), (8, \""neural networks\""), (8, \""deep learning\""),
+    (8, \""Big Data\""), (8, \""artificial intelligence\""), (9, \""Hadoop\""),
+    (9, \""Java\""), (9, \""MapReduce\""), (9, \""Big Data\"")
+]
+
+words_and_counts = Counter(
+    word
+    for user, interest in interests
+    for word in interest.lower().split()
+)
+
+for word, count in words_and_counts.most_common():
+    if count > 1:
+        print(word, count)
+```
+
+**Résultat:**
+- learning 3
+- java 3
+- python 3
+- big 3
+- data 3
+- hbase 2
+- regression 2
+- cassandra 2
+- statistics 2
+- probability 2
+- hadoop 2
+- networks 2
+- machine 2
+- neural 2
+- scikit-learn 2
+- r 2
+
+## Conclusion
+
+La science des données est un domaine passionnant qui offre de nombreuses opportunités pour explorer et comprendre le monde à travers les données. En utilisant des",92,0.8333,0.8116,0.0,0.0,0,0,0
+1,E2E_CHROMADB,Theory,17,Writer,NVIDIA: Mistral Nemotron,"```json
+{
+  ""order"": 2,
+  ""title"": ""Data Science Intro"",
+  ""summary"": ""Ce module introduit la data science, ses applications et ses composantes clés. Il explore comment les données sont transformées en insights, avec des exemples concrets et une métaphore pour les débutants."",
+  ""content"": ""## Introduction à la Data Science\n\nLa data science est souvent décrite comme l'art d'extraire des insights à partir de données brutes. Imaginez que vous êtes un détective dans une ville remplie de papiers éparpillés (les données). Votre mission est de trouver des indices cachés (les insights) qui vous aideront à résoudre des énigmes (les problèmes). C'est exactement ce que font les data scientists ! (Source: Chen, P.1)\n\n### Pourquoi la Data Science est-elle importante ?\n\nLa data science est partout autour de nous. Par exemple :\n- **OkCupid** utilise les réponses à des milliers de questions pour trouver des correspondances amoureuses, mais aussi pour prédire si quelqu'un est susceptible de coucher lors du premier rendez-vous. (Source: Chen, P.1)\n- **Facebook** utilise les informations sur votre ville natale et votre localisation actuelle pour identifier les tendances de migration mondiale et les bases de fans des équipes de football. (Source: Chen, P.1)\n- **Target** suit vos achats pour prédire si vous êtes enceinte et vous proposer des produits pour bébés. (Source: Chen, P.1)\n\nCes exemples montrent comment les données peuvent être transformées en informations utiles pour prendre des décisions.\n\n## Les Composantes de la Data Science\n\nSelon un diagramme de Venn célèbre dans l'industrie, la data science se situe à l'intersection de trois domaines :\n\n1. **Hacking Skills** : La capacité à manipuler et analyser les données à l'aide d'outils informatiques. (Source: Chen, P.2)\n2. **Mathématiques et Statistiques** : La compréhension des concepts mathématiques et statistiques pour analyser les données. (Source: Chen, P.2)\n3. **Expertise Substantive** : La connaissance du domaine d'application des données. (Source: Chen, P.2)\n\n### Pourquoi Python ?\n\nPython est un langage de programmation populaire pour la data science en raison de sa simplicité et de sa puissance. Bien qu'il existe des débats sur l'utilisation de R ou Python, Python est souvent préféré pour sa facilité d'apprentissage et sa polyvalence. (Source: Chen, P.11)\n\n## Où Trouver des Données ?\n\nSi vous débutez en data science, vous pouvez trouver des données dans plusieurs endroits :\n\n- **Data.gov** : Le portail de données ouvertes du gouvernement. (Source: Chen, P.302)\n- **Reddit** : Les forums r/datasets et r/data sont des endroits pour demander et découvrir des données. (Source: Chen, P.302)\n- **Amazon.com** : Une collection de données publiques que vous pouvez analyser. (Source: Chen, P.302)\n- **Blog de Robb Seaton** : Une liste curatée de données. (Source: Chen, P.302)\n\n## Conclusion\n\nLa data science est un domaine passionnant qui combine des compétences en programmation, en mathématiques et en statistiques pour extraire des insights à partir de données. En utilisant des outils comme Python et en trouvant des données dans des sources ouvertes, vous pouvez commencer votre voyage dans le monde de la data science.\n\n### Métaphore pour les Enfants\n\nImaginez que vous avez une boîte remplie de jouets cassés (les données brutes). Votre mission est de les réparer et de les assembler pour créer un nouveau jouet (les insights). C'est comme être un ingénieur de jouets, mais avec des données !"",
+  ""exercises_text"": [
+    ""1. **Recherche de Données** : Trouvez un jeu de données sur Data.gov et expliquez comment vous pourriez l'utiliser pour extraire des insights."",
+    ""2. **Analyse Simple** : Utilisez Python pour analyser un jeu de données simple (par exemple, les notes d'un cours) et calculez la moyenne et l'écart-type."",
+    ""3. **Visualisation** : Créez un graphique simple (par exemple, un histogramme) pour visualiser les données que vous avez analysées."",
+    ""4. **Prédiction** : Imaginez un scénario où vous pourriez utiliser la data science pour prédire un événement (par exemple, la popularité d'un produit)."",
+    ""5. **Comparaison** : Comparez les avantages et les inconvénients de l'utilisation de Python et R pour la data science.""
+  ]
+}
+```",92,0.5556,0.8963,1.0,nan,0,0,0
+1,ISOLE_PDF,Theory,17,Writer,GROQ: Llama 3.3 70B,"```json
+{
+  ""order"": 2,
+  ""title"": ""Data Science Intro"",
+  ""summary"": ""Introduction au domaine de la Data Science, qui consiste à extraire des insights à partir de données complexes. Nous allons explorer les concepts de base de la Data Science, tels que la collecte de données, le nettoyage, la visualisation et l'analyse."",
+  ""content"": ""
+## Introduction à la Data Science
+
+La Data Science est un domaine qui consiste à extraire des insights à partir de données complexes (Source: Doyle, P.1). Cela implique de collecter, de nettoyer, de visualiser et d'analyser les données pour prendre des décisions éclairées. La Data Science est un domaine en constante évolution, qui nécessite une combinaison de compétences en informatique, en statistiques et en domaine d'application (Source: Doyle, P.2).
+
+Imaginez que vous êtes un détective qui cherche à résoudre un mystère. Vous avez des indices, des pistes et des données à analyser pour trouver la solution. C'est un peu comme cela que fonctionne la Data Science. Nous collectons des données, nous les analysons et nous essayons de trouver des modèles ou des tendances pour prendre des décisions éclairées.
+
+## Collecte de données
+
+La collecte de données est le premier pas de la Data Science (Source: Doyle, P.3). Nous pouvons collecter des données à partir de diverses sources, telles que des bases de données, des fichiers CSV, des API ou même des capteurs. Les données peuvent être structurées ou non structurées. Les données structurées sont organisées de manière logique, comme des tables de données, tandis que les données non structurées sont plus difficiles à analyser, comme des textes ou des images.
+
+Par exemple, imaginez que vous êtes un responsable marketing qui veut analyser les ventes de produits en ligne. Vous pouvez collecter des données sur les ventes, les prix, les promotions et les clients pour analyser les tendances et prendre des décisions éclairées.
+
+## Nettoyage et préparation des données
+
+Une fois que nous avons collecté les données, nous devons les nettoyer et les préparer pour l'analyse (Source: Doyle, P.4). Cela implique de supprimer les données manquantes ou erronées, de convertir les données dans des formats appropriés et de normaliser les données pour éviter les biais.
+
+Imaginez que vous êtes un cuisinier qui prépare un plat. Vous devez nettoyer les ingrédients, les couper et les mélanger pour créer un plat délicieux. De même, nous devons nettoyer et préparer les données pour créer des modèles et des analyses précises.
+
+## Visualisation et analyse des données
+
+La visualisation des données est un élément clé de la Data Science (Source: Doyle, P.5). Nous utilisons des outils de visualisation pour représenter les données de manière graphique, comme des graphiques, des diagrammes ou des cartes. Cela nous permet de voir les tendances, les modèles et les relations entre les données.
+
+Par exemple, imaginez que vous êtes un économiste qui veut analyser l'évolution du PIB d'un pays. Vous pouvez utiliser des graphiques pour représenter les données et voir les tendances et les modèles.
+
+## Conclusion
+
+La Data Science est un domaine passionnant qui consiste à extraire des insights à partir de données complexes. Nous avons exploré les concepts de base de la Data Science, tels que la collecte de données, le nettoyage, la visualisation et l'analyse. Nous avons également utilisé des analogies pour expliquer les concepts de manière amusante et accessible. Nous espérons que ce cours vous a donné une bonne compréhension de la Data Science et vous a inspiré à en apprendre davantage.
+"",
+  ""exercises_text"": []
+}
+```",85,0.0769,0.8509,0.0,0.0,0,0,0
+1,E2E_CHROMADB,Theory,17,Writer,GROQ: Llama 3.3 70B,"```json
+{
+  ""order"": 1,
+  ""title"": ""Introduction au Data Science"",
+  ""summary"": ""Le Data Science est un domaine en pleine croissance qui consiste à extraire des insights à partir de données complexes. Dans ce cours, nous allons explorer les fondements du Data Science et découvrir comment il peut être appliqué dans différents domaines."",
+  ""content"": ""
+## Introduction
+Le Data Science est souvent décrit comme le « métier le plus sexy du 21e siècle » (Source: Nom, P.X). Mais qu'est-ce que le Data Science exactement ? Selon une définition couramment acceptée, le Data Science est l'intersection de trois domaines : les compétences en hacking, les connaissances en mathématiques et statistiques, et l'expertise dans un domaine spécifique (Source: Nom, P.X).
+
+## Qu'est-ce que le Data Science ?
+Le Data Science consiste à extraire des insights à partir de données complexes et souvent désorganisées. Les données peuvent provenir de diverses sources, telles que des sites web, des bases de données, des capteurs, etc. Les data scientists utilisent des outils et des techniques pour nettoyer, transformer et analyser ces données afin de découvrir des modèles, des tendances et des relations (Source: Nom, P.X).
+
+Imaginez que vous êtes un détective qui cherche à résoudre un mystère. Vous avez des indices et des preuves, mais vous devez les analyser et les relier pour découvrir la vérité. C'est un peu comme cela que fonctionne le Data Science. Les données sont les indices et les preuves, et les data scientists sont les détectives qui les analysent pour découvrir des insights.
+
+## Où trouver des données ?
+Les données sont partout, mais il peut être difficile de savoir où les trouver. Voici quelques sources de données :
+* Data.gov : le portail de données ouvertes du gouvernement (Source: Nom, P.X)
+* Reddit : les forums r/datasets et r/data sont des endroits où vous pouvez trouver et partager des données (Source: Nom, P.X)
+* Amazon : Amazon propose une collection de jeux de données publics que vous pouvez analyser (Source: Nom, P.X)
+* Robb Seaton : Robb Seaton propose une liste de jeux de données curatés sur son blog (Source: Nom, P.X)
+
+## Comment devenir un data scientist ?
+Pour devenir un data scientist, vous devez avoir des compétences en hacking, des connaissances en mathématiques et statistiques, et de l'expertise dans un domaine spécifique (Source: Nom, P.X). Vous pouvez apprendre ces compétences en suivant des cours, en lisant des livres et en pratiquant avec des projets personnels.
+
+## Conclusion
+Le Data Science est un domaine passionnant qui consiste à extraire des insights à partir de données complexes. Les données sont partout, et les data scientists utilisent des outils et des techniques pour les analyser et découvrir des modèles, des tendances et des relations. Si vous êtes intéressé par le Data Science, vous pouvez commencer par apprendre les compétences de base et par explorer les sources de données disponibles.
+"",
+  ""exercises_text"": []
+}
+```",85,0.875,0.8509,1.0,0.75,0,0,0
+1,ISOLE_PDF,Theory,17,Practice,NVIDIA: Qwen 3 Coder,"```json
+{
+  ""title"": ""Découvre les Données de Ventes de Mangas !"",
+  ""language"": ""Python"",
+  ""instructions"": ""Aide Léa, une passionnée de mangas, à analyser les ventes de sa librairie en ligne en calculant la moyenne, le maximum et le total des ventes hebdomadaires."",
+  ""starterCode"": ""import pandas as pd\n\n# Données de ventes (en euros) sur 4 semaines\nventes = [1200, 800, 950, 1100]\n\n# À toi de jouer !\n# 1. Calcule le total des ventes\n# 2. Trouve la semaine avec les meilleures ventes\n# 3. Calcule la moyenne des ventes\n\n# Utilise les variables suivantes :\ntotal_ventes = ___\nmeilleure_semaine = ___\nmoyenne_ventes = ___\n\nprint(f\""Total des ventes sur 4 semaines : {total_ventes} €\"")\nprint(f\""Meilleure semaine : {meilleure_semaine} €\"")\nprint(f\""Ventes moyennes : {moyenne_ventes:.2f} €\"")"",
+  ""solution"": ""import pandas as pd\n\n# Données de ventes (en euros) sur 4 semaines\nventes = [1200, 800, 950, 1100]\n\n# Calculs\ntotal_ventes = sum(ventes)\nmeilleure_semaine = max(ventes)\nmoyenne_ventes = sum(ventes) / len(ventes)\n\nprint(f\""Total des ventes sur 4 semaines : {total_ventes} €\"")\nprint(f\""Meilleure semaine : {meilleure_semaine} €\"")\nprint(f\""Ventes moyennes : {moyenne_ventes:.2f} €\"")"",
+  ""hints"": [
+    ""Utilise les fonctions sum(), max() et len() pour faire tes calculs simplement."",
+    ""Pense à stocker tes résultats dans les variables demandées pour qu'elles s'affichent correctement.""
+  ]
+}
+```",0,0,0,0,0,0,0,1
+1,ISOLE_PDF,Theory,17,Practice,GROQ: Llama 8B (Speed),"**Exercice : Analyse de données de température**
+
+**Titre :** ""Prévision de température : un jeu de données""
+
+**Langage :** Python
+
+**Consigne :** Écrivez un programme qui lit un fichier de données contenant les températures maximales et minimales pour chaque jour d'une semaine. Le programme doit calculer la température moyenne et afficher les jours où la température a été la plus élevée et la plus basse.
+
+**Fichier de données :** `donnees_température.csv`
+
+```csv
+Jour,Température_max,Température_min
+Lundi,25,10
+Mardi,28,12
+Mercredi,22,8
+Jeudi,26,11
+Vendredi,24,9
+Samedi,29,13
+Dimanche,23,10
+```
+
+**Code incomplet :**
+```python
+import pandas as pd
+
+# Chargement du fichier de données
+donnees = pd.read_csv('donnees_température.csv')
+
+# Calcul de la température moyenne
+température_moyenne = ...
+
+# Affichage des jours où la température a été la plus élevée et la plus basse
+print(""Jour où la température a été la plus élevée : "", ...)
+print(""Jour où la température a été la plus basse : "", ...)
+```
+
+**Indice 1 :** Utilisez la méthode `mean()` pour calculer la température moyenne.
+
+**Indice 2 :** Utilisez la méthode `idxmax()` pour trouver le jour où la température a été la plus élevée et la méthode `idxmin()` pour trouver le jour où la température a été la plus basse.
+
+**Solution :**
+```python
+import pandas as pd
+
+# Chargement du fichier de données
+donnees = pd.read_csv('donnees_température.csv')
+
+# Calcul de la température moyenne
+température_moyenne = donnees['Température_max'].mean()
+
+# Affichage des jours où la température a été la plus élevée et la plus basse
+jour_max = donnees['Jour'].iloc[donnees['Température_max'].idxmax()]
+jour_min = donnees['Jour'].iloc[donnees['Température_min'].idxmin()]
+
+print(""Température moyenne : "", température_moyenne)
+print(""Jour où la température a été la plus élevée : "", jour_max)
+print(""Jour où la température a été la plus basse : "", jour_min)
+```
+
+**Note :** Assurez-vous de sauvegarder le fichier `donnees_température.csv` dans le même répertoire que votre programme Python.",0,0,0,0,0,0,0,1
+1,ISOLE_PDF,Theory,17,Critic,GROQ: Llama 3.3 70B,"{
+  ""score"": 20,
+  ""approved"": false,
+  ""module_issues"": [
+    {""module"": ""COURS A EVALUER"", ""issue"": ""Les informations fournies sont incorrectes : les listes Python sont mutables, pas immuables, et il est possible de faire des boucles sur un dictionnaire""}
+  ],
+  ""global_issues"": [
+    ""Manque d'un scénario réel et engageant pour introduire le sujet"",
+    ""Ton et langage utilisés ne sont pas encourageants ni adaptés à un public de 17 ans"",
+    ""Absence de contexte et d'exemples concrets pour illustrer les concepts""
+  ]
+}",0,0,0,0,0,0,90,0
+1,ISOLE_PDF,Theory,17,Critic,GROQ: Llama 4 Scout,"{
+  ""score"": 0,
+  ""approved"": false,
+  ""module_issues"": [
+    {""module"": ""Les listes Python sont immuables. On ne peut pas faire de boucles sur un dictionnaire."", ""issue"": ""Les informations fournies sont incorrectes. Les listes Python sont en réalité mutables, et il est tout à fait possible de faire des boucles sur un dictionnaire.""}
+  ],
+  ""global_issues"": [""Le ton n'est pas encourageant, ni adapté à un public de 17 ans. Le langage utilisé est abrupt et manque de pédagogie.""]
+}",0,0,0,0,0,0,90,0
+1,ISOLE_PDF,Math,10,Writer,NVIDIA: Mistral Nemotron,"```json
+{
+  ""order"": 2,
+  ""title"": ""Vectors"",
+  ""summary"": ""Les vecteurs sont des objets mathématiques qui peuvent être additionnés et multipliés par des scalaires. Ils sont utilisés pour représenter des données numériques dans un espace à plusieurs dimensions."",
+  ""content"": ""# Vectors
+
+## Introduction
+
+Imaginez que vous êtes un explorateur dans un jeu vidéo. Vous avez une carte avec des coordonnées pour trouver des trésors. Chaque trésor est décrit par deux nombres : combien de pas vous devez faire vers l'est et combien de pas vers le nord. Par exemple, (3, 4) signifie 3 pas à l'est et 4 pas au nord. Ces paires de nombres sont des vecteurs ! (Source: Chen, P.4)
+
+## Qu'est-ce qu'un vecteur ?
+
+Un vecteur est une liste de nombres qui représente une position ou une direction dans un espace. Par exemple, dans un espace à deux dimensions, un vecteur peut être représenté comme [x, y], où x et y sont des nombres. Dans un espace à trois dimensions, un vecteur peut être [x, y, z].
+
+**Exemple :**
+- Vecteur 2D : [3, 4] (3 pas à l'est, 4 pas au nord)
+- Vecteur 3D : [1, 2, 3] (1 pas à l'est, 2 pas au nord, 3 pas en hauteur)
+
+## Opérations sur les vecteurs
+
+### Addition de vecteurs
+
+L'addition de vecteurs se fait composante par composante. Cela signifie que vous ajoutez les premiers éléments ensemble, les deuxièmes éléments ensemble, et ainsi de suite.
+
+**Exemple :**
+- Vecteur A = [1, 2]
+- Vecteur B = [3, 4]
+- A + B = [1+3, 2+4] = [4, 6]
+
+**Code Python :**
+```python
+def vector_add(v, w):
+    \""\""\""adds corresponding elements\""\""\""
+    return [v_i + w_i
+            for v_i, w_i in zip(v, w)]
+```
+
+### Soustraction de vecteurs
+
+La soustraction de vecteurs se fait également composante par composante.
+
+**Exemple :**
+- Vecteur A = [5, 6]
+- Vecteur B = [1, 2]
+- A - B = [5-1, 6-2] = [4, 4]
+
+**Code Python :**
+```python
+def vector_subtract(v, w):
+    \""\""\""subtracts corresponding elements\""\""\""
+    return [v_i - w_i
+            for v_i, w_i in zip(v, w)]
+```
+
+### Multiplication par un scalaire
+
+Multiplier un vecteur par un scalaire (un nombre) signifie multiplier chaque composante du vecteur par ce nombre.
+
+**Exemple :**
+- Vecteur A = [1, 2]
+- Scalaire c = 3
+- c * A = [3*1, 3*2] = [3, 6]
+
+**Code Python :**
+```python
+def scalar_multiply(c, v):
+    \""\""\""c is a number, v is a vector\""\""\""
+    return [c * v_i for v_i in v]
+```
+
+### Produit scalaire
+
+Le produit scalaire de deux vecteurs est la somme des produits de leurs composantes correspondantes.
+
+**Exemple :**
+- Vecteur A = [1, 2]
+- Vecteur B = [3, 4]
+- A • B = (1*3) + (2*4) = 3 + 8 = 11
+
+**Code Python :**
+```python
+def dot(v, w):
+    \""\""\""v_1 * w_1 + ... + v_n * w_n\""\""\""
+    return sum(v_i * w_i
+               for v_i, w_i in zip(v, w))
+```
+
+## Applications des vecteurs
+
+### Représentation de données
+
+Les vecteurs sont souvent utilisés pour représenter des données numériques. Par exemple, si vous avez des données sur la taille, le poids et l'âge de plusieurs personnes, vous pouvez représenter chaque personne comme un vecteur [taille, poids, âge].
+
+**Exemple :**
+- Personne 1 : [170, 60, 25]
+- Personne 2 : [180, 70, 30]
+
+### Calcul de la distance
+
+La distance entre deux vecteurs peut être calculée en utilisant la formule de la distance euclidienne.
+
+**Exemple :**
+- Vecteur A = [1, 2]
+- Vecteur B = [4, 6]
+- Distance = sqrt((4-1)^2 + (6-2)^2) = sqrt(9 + 16) = sqrt(25) = 5
+
+**Code Python :**
+```python
+import math
+
+def distance(v, w):
+    return math.sqrt(sum_of_squares(vector_subtract(v, w)))
+```
+
+## Conclusion
+
+Les vecteurs sont des outils puissants en mathématiques et en programmation. Ils permettent de représenter des données et de effectuer des opérations mathématiques de manière efficace. En utilisant les fonctions Python que nous avons définies, vous pouvez manipuler des vecteurs et effectuer des calculs avancés.
+
+**Analogie :**
+Imaginez que vous êtes un chef cuisinier. Chaque ingrédient est un vecteur. Vous pouvez ajouter des ingrédients (addition de vecteurs), multiplier une recette pour plus de personnes (multiplication par un scalaire), et même calculer la distance entre deux recettes (distance entre vecteurs). Les vecteurs sont comme les ingrédients de vos recettes mathématiques !"",
+  ""exercises_text"": [
+    ""Calculez l'addition des vecteurs [1, 2] et [3, 4]."",
+    ""Calculez la soustraction des vecteurs [5, 6] et [1, 2]."",
+    ""Multipliez le vecteur [1, 2] par le scalaire 3."",
+    ""Calculez le produit scalaire des vecteurs [1, 2] et [3, 4]."",
+    ""Calculez la distance entre les vecteurs [1, 2] et [4, 6].""
+  ]
+}
+```",92,1.0,nan,1.0,0.95,0,0,0
+1,E2E_CHROMADB,Math,10,Writer,NVIDIA: Mistral Nemotron,"```json
+{
+  ""order"": 2,
+  ""title"": ""Vectors"",
+  ""summary"": ""Les vecteurs sont des objets mathématiques qui peuvent être additionnés et multipliés par des scalaires. Ils sont utilisés pour représenter des données numériques dans un espace à plusieurs dimensions."",
+  ""content"": ""# Vectors
+
+## Introduction aux Vecteurs
+
+Imaginez que vous êtes dans un parc d'attractions et que vous voulez décrire votre position. Vous pourriez dire : \""Je suis à 10 mètres de la grande roue et à 5 mètres du manège.\"" Ces deux nombres (10 et 5) forment un vecteur qui décrit votre position dans le parc. Un vecteur est simplement une liste de nombres qui représente une position ou une direction dans un espace à plusieurs dimensions (Source: Data Science from Scratch, P.49).
+
+## Représentation des Vecteurs
+
+En Python, nous pouvons représenter un vecteur comme une liste de nombres. Par exemple, si nous avons les tailles, poids et âges d'un groupe de personnes, nous pouvons les représenter comme des vecteurs à trois dimensions :
+
+```python
+height_weight_age = [70,  # pouces
+                     170, # livres
+                     40 ] # années
+```
+
+De même, si vous êtes professeur et que vous avez les notes de quatre examens pour chaque élève, vous pouvez représenter les notes de chaque élève comme un vecteur à quatre dimensions :
+
+```python
+grades = [95,   # examen1
+          80,   # examen2
+          75,   # examen3
+          90 ]  # examen4
+```
+
+## Opérations sur les Vecteurs
+
+### Addition de Vecteurs
+
+L'addition de vecteurs se fait en additionnant leurs composantes correspondantes. Par exemple, si nous avons deux vecteurs `v` et `w`, leur somme est un nouveau vecteur où chaque composante est la somme des composantes correspondantes de `v` et `w` (Source: Data Science from Scratch, P.50).
+
+```python
+def vector_add(v, w):
+    return [v_i + w_i for v_i, w_i in zip(v, w)]
+```
+
+### Multiplication par un Scalaire
+
+La multiplication d'un vecteur par un scalaire (un nombre) se fait en multipliant chaque composante du vecteur par ce nombre (Source: Data Science from Scratch, P.50).
+
+```python
+def scalar_multiply(c, v):
+    return [c * v_i for v_i in v]
+```
+
+### Moyenne de Vecteurs
+
+La moyenne de plusieurs vecteurs est un nouveau vecteur où chaque composante est la moyenne des composantes correspondantes des vecteurs d'entrée (Source: Data Science from Scratch, P.50).
+
+```python
+def vector_mean(vectors):
+    n = len(vectors)
+    return scalar_multiply(1/n, vector_sum(vectors))
+```
+
+### Produit Scalaire
+
+Le produit scalaire de deux vecteurs est la somme des produits de leurs composantes correspondantes. Par exemple, si nous avons deux vecteurs `v` et `w`, leur produit scalaire est calculé comme suit (Source: Data Science from Scratch, P.51):
+
+```python
+def dot(v, w):
+    return sum(v_i * w_i for v_i, w_i in zip(v, w))
+```
+
+## Applications des Vecteurs
+
+Les vecteurs sont utilisés dans de nombreuses applications en science des données. Par exemple, ils peuvent être utilisés pour représenter des données numériques, comme les notes des élèves ou les caractéristiques des personnes. Ils sont également utilisés dans des algorithmes plus avancés, comme la centralité des vecteurs propres, qui est une mesure de l'importance d'un nœud dans un réseau (Source: Data Science from Scratch, P.263).
+
+## Conclusion
+
+Les vecteurs sont des outils mathématiques puissants qui nous permettent de représenter et de manipuler des données dans un espace à plusieurs dimensions. Ils sont essentiels pour comprendre de nombreux concepts et techniques en science des données. En utilisant les opérations de base sur les vecteurs, comme l'addition, la multiplication par un scalaire et le produit scalaire, nous pouvons effectuer des calculs complexes et obtenir des informations précieuses à partir de nos données.
+
+## Exemple Amusant
+
+Imaginez que vous êtes un pirate et que vous avez un trésor caché sur une île. Pour trouver le trésor, vous devez suivre une carte qui vous donne des instructions en termes de vecteurs. Par exemple, la carte pourrait dire : \""Marchez 10 pas vers l'est, puis 5 pas vers le nord.\"" Ces instructions forment un vecteur (10, 5) qui vous guide vers le trésor. En utilisant les opérations sur les vecteurs, vous pouvez combiner plusieurs instructions pour trouver le chemin le plus direct vers le trésor !
+
+## Exercices
+
+1. **Représentation de Vecteurs**
+   - Créez un vecteur qui représente les notes d'un élève sur trois examens : 85, 90, 78.
+   - Créez un vecteur qui représente les dimensions d'une boîte : longueur 10 cm, largeur 5 cm, hauteur 3 cm.
+
+2. **Addition de Vecteurs**
+   - Additionnez les vecteurs [1, 2, 3] et [4, 5, 6].
+   - Additionnez les vecteurs [10, 20] et [30, 40].
+
+3. **Multiplication par un Scalaire**
+   - Multipliez le vecteur [2, 4, 6] par 3.
+   - Multipliez le vecteur [5, 10] par 0.5.
+
+4. **Moyenne de Vecteurs**
+   - Calculez la moyenne des vecteurs [1, 2, 3], [4, 5, 6] et [7, 8, 9].
+   - Calculez la moyenne des vecteurs [10, 20], [30, 40] et [50, 60].
+
+5. **Produit Scalaire**
+   - Calculez le produit scalaire des vecteurs [1, 2, 3] et [4, 5, 6].
+   - Calculez le produit scalaire des vecteurs [10, 20] et [30, 40].
+"",
+  ""exercises_text"": [
+    ""Représentation de Vecteurs"",
+    ""Addition de Vecteurs"",
+    ""Multiplication par un Scalaire"",
+    ""Moyenne de Vecteurs"",
+    ""Produit Scalaire""
+  ]
+}
+```",90,1.0,0.9036,1.0,1.0,0,0,0
+1,ISOLE_PDF,Math,10,Writer,GROQ: Llama 3.3 70B,"```json
+{
+  ""order"": 2,
+  ""title"": ""Vectors"",
+  ""summary"": ""Les vecteurs sont des objets mathématiques qui peuvent être ajoutés et multipliés par des nombres. Ils sont utilisés pour représenter des quantités physiques telles que la position, la vitesse et l'accélération."",
+  ""content"": ""
+## Introduction aux Vecteurs
+
+Les vecteurs sont des objets mathématiques qui peuvent être ajoutés et multipliés par des nombres (Source: Linear Algebra, P.10). Ils sont utilisés pour représenter des quantités physiques telles que la position, la vitesse et l'accélération. Les vecteurs peuvent être représentés graphiquement par des flèches dans un espace à plusieurs dimensions.
+
+Imaginez que vous êtes un capitaine de navire qui doit naviguer à travers une tempête. Vous devez prendre en compte la direction et la vitesse du vent, des vagues et du courant pour atteindre votre destination en toute sécurité. Les vecteurs peuvent vous aider à représenter ces quantités et à prendre des décisions éclairées.
+
+## Représentation des Vecteurs
+
+Les vecteurs peuvent être représentés de différentes manières, notamment :
+
+*   Sous forme de liste de nombres : par exemple, [3, 4] représente un vecteur avec deux composantes, 3 et 4.
+*   Sous forme de flèche dans un espace à plusieurs dimensions : par exemple, une flèche qui pointe de l'origine (0, 0) à (3, 4) représente le même vecteur que la liste [3, 4].
+
+(Source: Linear Algebra, P.15)
+
+## Opérations sur les Vecteurs
+
+Les vecteurs peuvent être ajoutés et multipliés par des nombres. L'addition de deux vecteurs se fait en ajoutant leurs composantes correspondantes. La multiplication d'un vecteur par un nombre se fait en multipliant chaque composante du vecteur par ce nombre.
+
+Par exemple, si on a deux vecteurs [2, 3] et [4, 5], leur somme est [2 + 4, 3 + 5] = [6, 8]. Si on multiplie le vecteur [2, 3] par 2, on obtient [2 \* 2, 2 \* 3] = [4, 6].
+
+(Source: Linear Algebra, P.20)
+
+## Exemples d'Utilisation des Vecteurs
+
+Les vecteurs sont utilisés dans de nombreux domaines, notamment :
+
+*   La physique : pour représenter la position, la vitesse et l'accélération des objets.
+*   L'ingénierie : pour représenter les forces et les moments qui agissent sur les structures.
+*   La navigation : pour représenter la position et la vitesse des navires et des avions.
+
+(Source: Linear Algebra, P.30)
+
+## Conclusion
+
+Les vecteurs sont des outils puissants pour représenter des quantités physiques et effectuer des calculs. Ils sont utilisés dans de nombreux domaines et sont essentiels pour résoudre des problèmes complexes. En comprenant les vecteurs, vous pouvez améliorer vos compétences en mathématiques et en sciences, et vous préparer à des carrières dans des domaines tels que la physique, l'ingénierie et la navigation.
+
+  "",
+  ""exercises_text"": []
+}
+```",80,0.3529,0.7924,nan,nan,0,0,0
